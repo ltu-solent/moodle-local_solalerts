@@ -39,8 +39,7 @@ if ($hassiteconfig) {
     $options = 'page-my-index
 page-frontpage
 page-course-view
-page-mod-assign-view
-    ';
+page-mod-assign-view';
     $settings->add(
         new admin_setting_configtextarea(
             'local_solalerts/pagetypes',
@@ -53,26 +52,3 @@ page-mod-assign-view
     $ADMIN->add('localplugins', $settings);
 }
 
-    
-//     $options = 'page-my-index
-//     page-frontpage
-//     page-course-view
-//     page-mod-assign-view
-//     ';
-//     // Add folder in property tree for settings pages.
-//     $solalerts_category = new admin_category('solalerts_category', new lang_string('solalerts', 'local_solalerts'));
-//     $ADMIN->add('localplugins', $solalerts_category);
-//     
-//     $settings->add(
-//         new admin_setting_configtextarea(
-//             'local_solalerts/pagetypes',
-//             new lang_string('pagetypes', 'local_solalerts'),
-//             new lang_string('pagetypes_desc', 'local_solalerts'),
-//             $options,
-//             PARAM_TEXT
-//         )
-//     );
-//     $ADMIN->
-
-    
-// }
