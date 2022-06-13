@@ -33,6 +33,7 @@ $string['alerttype_help'] = 'Alert types will display with different coloured te
 $string['banner'] = 'Banner';
 
 $string['choosealerttype'] = 'Choose alert type';
+$string['choosepagetype'] = 'Choose page type';
 $string['confirmdelete'] = 'Confirm deletion of "{$a}"';
 $string['content'] = 'Alert content';
 $string['content_help'] = 'Depending on the content type, the content will be put in different containers.

@@ -68,7 +68,8 @@ class solalert_form extends persistentform {
         $mform->hideIf('alerttype', 'contenttype', 'neq', solalert::CONTENTTYPE_ALERT);
         $mform->addHelpButton('alerttype', 'alerttype', 'local_solalerts');
 
-        $choices = \local_solalerts\api::pagetypes_menu();
+        $choices = ['' => new lang_string('choosepagetype', 'local_solalerts')]
+            + \local_solalerts\api::pagetypes_menu();
         $mform->addElement('select', 'pagetype', new lang_string('pagetype', 'local_solalerts'), $choices);
         $mform->addHelpButton('pagetype', 'pagetype', 'local_solalerts');
         $mform->addRule('pagetype', $required, 'required', null, 'client');
