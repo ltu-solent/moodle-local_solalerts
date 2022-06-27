@@ -79,6 +79,7 @@ $string['pluginname'] =  'Sol Alerts';
 $string['privacy:metadata'] = 'The local_solalert Sol Alert plugin does not store any personal data.';
 
 $string['solalerts'] = 'SolAlerts';
+$string['solalerts:managealerts'] = 'Manage alerts';
 $string['systemroles'] = 'System roles';
 
 $string['title'] = 'Title';
