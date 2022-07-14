@@ -62,10 +62,9 @@ class api {
                 if ($manager->string_exists($pagetype, 'local_solalerts')) {
                     $menu[$pagetype] = get_string($pagetype, 'local_solalerts');
                 } else {
-                    $menu[$pagetype] = ucwords(str_replace('-', ' ', str_replace('page-', '', $pagetype)));
+                    $menu[$pagetype] = ucwords(str_replace('-', ' ', preg_replace('/^page-/', '', $pagetype)));
                 }
             }
-            
         }
         return $menu;
     }
