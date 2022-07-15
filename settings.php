@@ -30,7 +30,7 @@ $ADMIN->add('appearance',
         'solalerts',
         new lang_string('pluginname', 'local_solalerts'),
         new moodle_url('/local/solalerts/index.php'),
-        'local/solalerts:managealerts',
+        'local/solalerts:managealerts'
     )
 );
 
