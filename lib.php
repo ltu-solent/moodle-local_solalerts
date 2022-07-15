@@ -84,12 +84,27 @@ function local_solalerts_solentzone_alerts($alerts) {
         }
         // Perhaps check capability rather than role.
         if ($sa->rolesincourse != '') {
-            
+            $rolesincourse = explode(',', $sa->rolesincourse);
+            // We need to allow checking parent context, as the person may be viewing an activity,
+            // and the parent is the course.
             $userroles = get_user_roles($PAGE->context, $USER->id);
-
+            $hasroles = array_filter($userroles, function($role) use ($rolesincourse) {
+                return in_array($role->roleid, $rolesincourse);
+            });
+            if (count($hasroles) == 0) {
+                continue;
+            }
         }
-        
-
+        if ($sa->rolesinsystems != '') {
+            $rolesinsystems = explode(',', $sa->rolesinsystems);
+            $userroles = get_user_roles(context_system::instance(), $USER->id, false);
+            $hasroles = array_filter($userroles, function($role) use ($rolesinsystems) {
+                return in_array($role->roleid, $rolesinsystems);
+            });
+            if (count($hasroles) == 0) {
+                continue;
+            }
+        }
         $display = ($validpagetype && $validtimeframe && $validcoursefield && $validuser);
         if ($display) {
             $alerts[] = new \core\output\notification(clean_text($sa->content, FORMAT_PLAIN), $sa->alerttype);
