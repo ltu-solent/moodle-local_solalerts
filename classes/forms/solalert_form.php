@@ -34,7 +34,7 @@ use stdClass;
 
 class solalert_form extends persistentform {
 
-    protected static $persistentclass = solalert::class; //solalert::class;
+    protected static $persistentclass = solalert::class;
 
     public function definition() {
         global $CFG;
@@ -88,8 +88,10 @@ class solalert_form extends persistentform {
         $select = $mform->addElement('select', 'rolesinsystems', new lang_string('systemroles', 'local_solalerts'), $choices);
         $select->setMultiple(true);
 
-        $mform->addElement('date_time_selector', 'displayfrom', new lang_string('displayfrom', 'local_solalerts'), ['optional' => true]);
-        $mform->addElement('date_time_selector', 'displayto', new lang_string('displayto', 'local_solalerts'), ['optional' => true]);
+        $mform->addElement('date_time_selector', 'displayfrom', new lang_string('displayfrom', 'local_solalerts'),
+            ['optional' => true]);
+        $mform->addElement('date_time_selector', 'displayto', new lang_string('displayto', 'local_solalerts'),
+            ['optional' => true]);
 
         $mform->addElement('advcheckbox', 'enabled', new lang_string('enabled', 'local_solalerts'));
 
@@ -125,5 +127,4 @@ class solalert_form extends persistentform {
         $data->rolesinsystems = $this->get_persistent()->get('rolesinsystems');
         return $data;
     }
-
 }

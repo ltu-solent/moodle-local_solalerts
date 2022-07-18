@@ -26,8 +26,6 @@
 use local_solalerts\api;
 use local_solalerts\solalert;
 
-defined('MOODLE_INTERNAL') || die();
-
 function local_solalerts_solentzone_alerts($alerts) {
     global $COURSE, $DB, $PAGE, $USER;
     $pagetype = 'page-' . $PAGE->pagetype;

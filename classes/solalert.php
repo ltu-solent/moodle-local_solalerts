@@ -107,10 +107,6 @@ class solalert extends persistent {
         ];
     }
 
-    // protected function validate_content($value) {
-    //     return true;
-    // }
-
     protected function validate_coursefield($value) {
         global $DB;
         if ($value == '') {
@@ -147,7 +143,7 @@ class solalert extends persistent {
         $validroles = \local_solalerts\api::availableroles(CONTEXT_COURSE);
         $validrolekeys = array_keys($validroles);
         $roles = explode(',', $value);
-        foreach($roles as $role) {
+        foreach ($roles as $role) {
             if (!is_int($role)) {
                 return new lang_string('invalidrole', 'local_solalerts');
             }
@@ -166,7 +162,7 @@ class solalert extends persistent {
         $validroles = \local_solalerts\api::availableroles(CONTEXT_SYSTEM);
         $validrolekeys = array_keys($validroles);
         $roles = explode(',', $value);
-        foreach($roles as $role) {
+        foreach ($roles as $role) {
             if (!is_int($role)) {
                 return new lang_string('invalidrole', 'local_solalerts');
             }

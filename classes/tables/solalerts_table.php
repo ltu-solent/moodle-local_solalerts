@@ -41,7 +41,6 @@ class solalerts_table extends table_sql {
     private $courseroles = [];
     public function __construct($uniqueid) {
         parent::__construct($uniqueid);
-        $context = context_system::instance();
         $this->useridfield = 'modifiedby';
         $this->pagetypes = \local_solalerts\api::pagetypes_menu();
         $this->systemroles = \local_solalerts\api::availableroles(CONTEXT_SYSTEM);
@@ -78,13 +77,7 @@ class solalerts_table extends table_sql {
         $this->define_baseurl(new moodle_url("/local/solalerts/index.php"));
         $where = '1=1';
         $this->set_sql('*', "{local_solalerts}", $where);
-
-
     }
-
-    // public function col_id($col) {
-    //     return $col->id;
-    // }
 
     public function col_contenttype($col) {
         $contenttype = $col->contenttype;
@@ -133,7 +126,7 @@ class solalerts_table extends table_sql {
             if (count($rolenames) > 0) {
                 $items[] = get_string('systemroles', 'local_solalerts') . ': ' . join(', ', $rolenames);
             }
-        } 
+        }
         if ($col->displayfrom > 0) {
             $items[] = get_string('displayfrom', 'local_solalerts') . ': ' . userdate($col->displayfrom);
         }

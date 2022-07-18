@@ -39,8 +39,8 @@ $string['content'] = 'Alert content';
 $string['content_help'] = 'Depending on the content type, the content will be put in different containers.
 Just include the alert text for an alert. How it\'s displayed will be done for you.';
 $string['contenttype'] = 'Content type';
-$string['contenttype_help'] = 'Alerts will be grouped by their type (Banner, Alert, Notices, Dashlinks) and 
-will be displayed differently, according to their type. Dashlinks are created in code by other plugins.';
+$string['contenttype_help'] = 'Alerts will be grouped by their type (Banner, Alert, Notices, Dashlinks) and
+ will be displayed differently, according to their type. Dashlinks are created in code by other plugins.';
 $string['coursefield'] = 'Course field';
 $string['coursefield_help'] = 'Specify the coursefield shortname followed by equals followed by the value.
 e.g. faculty=FBLDT';
@@ -75,7 +75,7 @@ $string['pagetype_help'] = 'The pagetype is the id of the body element in the ht
 $string['pagetyperequired'] = 'You must specify a pagetype - this is to prevent messages showing on every page.';
 $string['pagetypes'] = 'Pagetypes';
 $string['pagetypes_desc'] = 'One pagetype per line. This is to help make choosing a pagetype easier.';
-$string['pluginname'] =  'Sol Alerts';
+$string['pluginname'] = 'Sol Alerts';
 $string['privacy:metadata'] = 'The local_solalert Sol Alert plugin does not store any personal data.';
 
 $string['solalerts'] = 'SolAlerts';

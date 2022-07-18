@@ -37,7 +37,6 @@ class api {
      */
     public static function availableroles($contextlevel = CONTEXT_SYSTEM): array {
         global $DB;
-        
         $sql = "SELECT r.id, r.name, r.shortname, r.description, r.sortorder, r.archetype
             FROM {role_context_levels} rcl
             JOIN {role} r ON r.id = rcl.roleid
