@@ -34,12 +34,13 @@ jobs:
         # moodle-branch: ['MOODLE_311_STABLE']
         # database: [pgsql, mariadb]
         include:
-          - php: '8.0'
-            moodle-branch: 'MOODLE_400_STABLE'
-            database: 'mariadb'
-          - php: '7.4'
-            moodle-branch: 'MOODLE_400_STABLE'
-            database: 'mariadb'
+          # Theme isn't ready for Moodle 4.0
+          # - php: '8.0'
+          #   moodle-branch: 'MOODLE_400_STABLE'
+          #   database: 'mariadb'
+          # - php: '7.4'
+          #   moodle-branch: 'MOODLE_400_STABLE'
+          #   database: 'mariadb'
           - php: '7.4'
             moodle-branch: 'MOODLE_39_STABLE'
             database: 'mariadb'
