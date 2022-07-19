@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * List available alerts
+ * Generator for SolAlerts
  *
  * @package   local_solalerts
  * @author    Mark Sharp <mark.sharp@solent.ac.uk>
@@ -23,27 +23,23 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require_once('../../config.php');
+defined('MOODLE_INTERNAL') || die();
 
-require_capability('local/solalerts:managealerts', context_system::instance());
-$context = context_system::instance();
+class local_solalerts_generator extends component_generator_base {
 
-$PAGE->set_context($context);
-$PAGE->set_heading(get_string('pluginname', 'local_solalerts'));
-$PAGE->set_pagelayout('admin');
-$PAGE->set_title(get_string('pluginname', 'local_solalerts'));
-$PAGE->set_url($CFG->wwwroot.'/local/solalerts/index.php');
+    public $alertcount = 0;
+    /**
+     * Reset process.
+     *
+     * Do not call directly.
+     *
+     * @return void
+     */
+    public function reset() {
+        $this->alertcount = 0;
+    }
 
-echo $OUTPUT->header();
-
-$new = new action_link(new moodle_url('/local/solalerts/edit.php', ['action' => 'new']),
-    get_string('newsolalert', 'local_solalerts'), null,
-    ['class' => 'btn btn-primary'],
-    new pix_icon('i/calendareventtime', null));
-echo $OUTPUT->render($new);
-
-$table = new \local_solalerts\tables\solalerts_table('solalerts');
-
-$table->out(100, false);
-
-echo $OUTPUT->footer();
+    public function create_solalert($data) {
+        // Fills in any missing data required.
+    }
+}

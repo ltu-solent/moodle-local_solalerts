@@ -59,6 +59,7 @@ $string['enabled'] = 'Enabled';
 
 $string['invalidfield'] = 'Specified field ({$a}) does not exist.';
 $string['invalidfieldformat'] = 'The entry must be of the format fieldname=value';
+$string['invalidrole'] = 'Invalid role specified';
 
 $string['lastmodified'] = 'Last modified';
 

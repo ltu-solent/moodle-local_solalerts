@@ -84,13 +84,16 @@ class solalert extends persistent {
                 'null' => NULL_ALLOWED
             ],
             'coursefield' => [
-                'type' => PARAM_RAW_TRIMMED
+                'type' => PARAM_RAW_TRIMMED,
+                'default' => ''
             ],
             'rolesincourse' => [
-                'type' => PARAM_SEQUENCE
+                'type' => PARAM_SEQUENCE,
+                'default' => ''
             ],
             'rolesinsystems' => [
-                'type' => PARAM_SEQUENCE
+                'type' => PARAM_SEQUENCE,
+                'default' => ''
             ],
             'displayfrom' => [
                 'type' => PARAM_INT,
