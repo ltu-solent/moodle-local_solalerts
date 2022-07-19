@@ -24,7 +24,7 @@
  */
 
 require_once('../../config.php');
-
+require_login(null, false);
 require_capability('local/solalerts:managealerts', context_system::instance());
 $context = context_system::instance();
 

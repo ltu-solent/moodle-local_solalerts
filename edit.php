@@ -27,7 +27,7 @@ use local_solalerts\forms\solalert_form;
 use local_solalerts\solalert;
 
 require_once('../../config.php');
-
+require_login(null, false);
 $context = context_system::instance();
 require_capability('local/solalerts:managealerts', $context);
 

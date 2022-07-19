@@ -25,6 +25,7 @@
 
 namespace local_solalerts\tables;
 
+defined('MOODLE_INTERNAL') || die();
 require_once("$CFG->libdir/tablelib.php");
 
 use context_system;
