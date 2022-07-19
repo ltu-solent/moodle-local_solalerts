@@ -119,7 +119,7 @@ class solalert extends persistent {
             return new lang_string('invalidfieldformat', 'local_solalerts');
         }
         [$key, $value] = explode('=', $value);
-        $sql = "SELECT f.id 
+        $sql = "SELECT f.id
         FROM {customfield_field} f
         JOIN {customfield_category} c ON c.id=f.categoryid
         WHERE f.shortname = :shortname AND c.component='core_course' AND c.area='course'";
