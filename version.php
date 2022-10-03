@@ -30,5 +30,5 @@ $plugin->release   = 2022060600;
 $plugin->requires  = 2020061500;
 $plugin->component = 'local_solalerts';
 $plugin->dependencies = [
-    'theme_solent' => 2020102703
+
 ];
