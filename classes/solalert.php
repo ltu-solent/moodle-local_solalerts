@@ -79,21 +79,9 @@ class solalert extends persistent {
                 'null' => NULL_NOT_ALLOWED,
                 'choices' => \local_solalerts\api::pagetypes_menu(true)
             ],
-            'userprofilefield' => [
-                'type' => PARAM_RAW_TRIMMED,
+            'filters' => [
+                'type' => PARAM_RAW,
                 'null' => NULL_ALLOWED
-            ],
-            'coursefield' => [
-                'type' => PARAM_RAW_TRIMMED,
-                'default' => ''
-            ],
-            'rolesincourse' => [
-                'type' => PARAM_SEQUENCE,
-                'default' => ''
-            ],
-            'rolesinsystems' => [
-                'type' => PARAM_SEQUENCE,
-                'default' => ''
             ],
             'displayfrom' => [
                 'type' => PARAM_INT,
@@ -181,13 +169,20 @@ class solalert extends persistent {
         if ($value == '') {
             return true;
         }
-        if (strpos($value, '=') === false) {
-            return new lang_string('invalidfieldformat', 'local_solalerts');
-        }
-        [$key, $value] = explode('=', $value);
-        if (!$DB->record_exists('user_info_field', ['shortname' => $key])) {
-            return new lang_string('invalidfield', 'local_solalerts', $key);
-        }
+        // if (strpos($value, '=') === false) {
+        //     return new lang_string('invalidfieldformat', 'local_solalerts');
+        // }
+        // [$key, $value] = explode('=', $value);
+        // if (!$DB->record_exists('user_info_field', ['shortname' => $key])) {
+        //     return new lang_string('invalidfield', 'local_solalerts', $key);
+        // }
         return true;
+    }
+
+    protected function get_userprofilefield() {
+        error_log(print_r($this->raw_get('userprofilefield'), true));
+        $decode = json_decode($this->raw_get('userprofilefield'));
+        // $decode = $this->raw_get('userprofilefield');
+        return $decode;
     }
 }

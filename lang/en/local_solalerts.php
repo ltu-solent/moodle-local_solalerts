@@ -44,6 +44,10 @@ $string['contenttype_help'] = 'Alerts will be grouped by their type (Banner, Ale
 $string['coursefield'] = 'Course field';
 $string['coursefield_help'] = 'Specify the coursefield shortname followed by equals followed by the value.
 e.g. faculty=FBLDT';
+$string['coursefilterfield'] = 'Custom course field name';
+$string['coursefilterlimiter'] = 'Custom course field operator';
+$string['courselabel'] = '{$a->label}: {$a->field} {$a->operator} {$a->value}';
+$string['courselabelnovalue'] = '{$a->label}: {$a->field} {$a->operator}';
 $string['courseroles'] = 'Course roles';
 
 $string['delete'] = 'Delete';
@@ -86,6 +90,9 @@ $string['systemroles'] = 'System roles';
 $string['title'] = 'Title';
 
 $string['updated'] = '"{$a}" has been updated.';
+$string['userfilter'] = 'User filter';
 $string['userprofilefield'] = 'User profile field';
 $string['userprofilefield_help'] = 'Specify the user profile field shortname followed by equals followed by the value.
 e.g. faculty=FBLDT';
+
+$string['valuefor'] = '{$a} value';

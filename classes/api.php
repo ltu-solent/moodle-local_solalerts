@@ -67,4 +67,13 @@ class api {
         }
         return $menu;
     }
+
+    public static function userfields_menu() {
+        $fields = [
+            'idnumber' => get_string('idnumber'),
+            'firstname' => get_string('firstname'),
+            'lastname' => get_string('lastname'),
+        ];
+        return $fields;
+    }
 }

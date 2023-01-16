@@ -29,12 +29,19 @@ use context_system;
 use core\form\persistent as persistentform;
 use lang_string;
 use local_solalerts\api;
+use local_solalerts\filters\course_filter_customfield;
 use local_solalerts\solalert;
 use stdClass;
+use user_filter_profilefield;
+
+defined('MOODLE_INTERNAL') || die();
+
+require_once($CFG->dirroot . '/user/filters/profilefield.php');
 
 class solalert_form extends persistentform {
 
     protected static $persistentclass = solalert::class;
+    protected $_fields;
 
     public function definition() {
         global $CFG;
@@ -74,11 +81,32 @@ class solalert_form extends persistentform {
         $mform->addHelpButton('pagetype', 'pagetype', 'local_solalerts');
         $mform->addRule('pagetype', $required, 'required', null, 'client');
 
-        $mform->addElement('text', 'userprofilefield', new lang_string('userprofilefield', 'local_solalerts'));
-        $mform->addHelpButton('userprofilefield', 'userprofilefield', 'local_solalerts');
+        $mform->addElement('date_time_selector', 'displayfrom', new lang_string('displayfrom', 'local_solalerts'),
+            ['optional' => true]);
+        $mform->addElement('date_time_selector', 'displayto', new lang_string('displayto', 'local_solalerts'),
+            ['optional' => true]);
 
-        $mform->addElement('text', 'coursefield', new lang_string('coursefield', 'local_solalerts'));
-        $mform->addHelpButton('coursefield', 'coursefield', 'local_solalerts');
+        $mform->addElement('advcheckbox', 'enabled', new lang_string('enabled', 'local_solalerts'));
+
+        $mform->addElement('header', 'userfilterheader', new lang_string('userfilter', 'local_solalerts'));
+
+        $userfilters = [
+            'userprofilefield' => 1,
+            'coursecustomfield' => 1
+        ];
+        // $mform->addElement('text', 'userprofilefield', new lang_string('userprofilefield', 'local_solalerts'));
+        // $mform->addHelpButton('userprofilefield', 'userprofilefield', 'local_solalerts');
+
+        // $mform->addElement('text', 'coursefield', new lang_string('coursefield', 'local_solalerts'));
+        // $mform->addHelpButton('coursefield', 'coursefield', 'local_solalerts');
+
+        $this->_fields = [];
+        foreach ($userfilters as $userfilter => $value) {
+            if ($field = $this->get_field($userfilter, false)) {
+                $this->_fields[$userfilter] = $field;
+                $field->setupForm($mform);
+            }
+        }
 
         $choices = api::availableroles(CONTEXT_COURSE);
         $select = $mform->addElement('select', 'rolesincourse', new lang_string('courseroles', 'local_solalerts'), $choices);
@@ -87,13 +115,6 @@ class solalert_form extends persistentform {
         $choices = api::availableroles(CONTEXT_SYSTEM);
         $select = $mform->addElement('select', 'rolesinsystems', new lang_string('systemroles', 'local_solalerts'), $choices);
         $select->setMultiple(true);
-
-        $mform->addElement('date_time_selector', 'displayfrom', new lang_string('displayfrom', 'local_solalerts'),
-            ['optional' => true]);
-        $mform->addElement('date_time_selector', 'displayto', new lang_string('displayto', 'local_solalerts'),
-            ['optional' => true]);
-
-        $mform->addElement('advcheckbox', 'enabled', new lang_string('enabled', 'local_solalerts'));
 
         $mform->addElement('hidden', 'usermodified');
         $mform->addElement('hidden', 'timemodified');
@@ -111,8 +132,28 @@ class solalert_form extends persistentform {
         $data = parent::convert_fields($data);
         // Multiselects are stored as commas-separated strings so we need to convert
         // the form array to the csv format.
-        $data->rolesincourse = implode(',', $data->rolesincourse);
-        $data->rolesinsystems = implode(',', $data->rolesinsystems);
+        $filters = (object)[
+            'rolesincourse' => implode(',', $data->rolesincourse),
+            'rolesinsystem' => implode(',', $data->rolesinsystem),
+            'userprofilefield' => (object)[
+                'op' => $data->userprofilefield_op,
+                'fld' => $data->userprofilefield_fld,
+                'value' => $data->userprofilefield
+            ],
+            'coursecustomfield' => (object)[
+                'op' => $data->coursecustomfield_op,
+                'fld' => $data->coursecustomfield_fld,
+                'value' => $data->coursecustomfield
+            ]
+        ];
+        // $data->rolesincourse = implode(',', $data->rolesincourse);
+        // $data->rolesinsystems = implode(',', $data->rolesinsystems);
+        // $data->userprofilefield = json_encode([
+        //     'op' => $data->userprofilefield_op,
+        //     'fld' => $data->userprofilefield_fld,
+        //     'value' => $data->userprofilefield
+        // ]);
+        $data->filters = json_encode($filters);
         return $data;
     }
 
@@ -123,8 +164,35 @@ class solalert_form extends persistentform {
      */
     protected function get_default_data() {
         $data = parent::get_default_data();
-        $data->rolesincourse = $this->get_persistent()->get('rolesincourse');
-        $data->rolesinsystems = $this->get_persistent()->get('rolesinsystems');
+        $filters = json_decode($this->get_persistent()->get('filters'));
+        $data->rolesincourse = $filters->rolesincourse ?? '';
+        $data->rolesinsystem = $filters->rolesinsystem ?? '';
+        // $data->rolesinsystems = $this->get_persistent()->get('rolesinsystems');
+        // $data->rolesincourse = $this->get_persistent()->get('rolesincourse');
+
+        $profiledata = $filters->userprofilefield ?? null;
+        if ($profiledata) {
+            $data->userprofilefield = $profiledata->value;
+            $data->userprofilefield_op = $profiledata->op;
+            $data->userprofilefield_fld = $profiledata->fld;
+        }
+        $coursedata = $filters->coursecustomfield ?? null;
+        if ($coursedata) {
+            $data->coursecustomfield = $coursedata->value;
+            $data->coursecustomfield_op = $coursedata->op;
+            $data->coursecustomfield_fld = $coursedata->fld;
+        }
         return $data;
+    }
+
+    protected function get_field($fieldname, $advanced) {
+        switch ($fieldname) {
+            case 'userprofilefield':
+                return new user_filter_profilefield('userprofilefield', get_string('profilefields', 'admin'), $advanced);
+            case 'coursecustomfield':
+                return new course_filter_customfield($fieldname, get_string('coursefield', 'local_solalerts'), $advanced);
+            default:
+                return null;
+        }
     }
 }

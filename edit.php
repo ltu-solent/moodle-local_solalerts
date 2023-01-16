@@ -89,6 +89,7 @@ if ($formdata = $form->get_data()) {
     } else {
         $solalert = new solalert($formdata->id);
         if ($action == 'edit') {
+            error_log(print_r($formdata, true));
             $solalert->from_record($formdata);
             $solalert->update();
             redirect(new moodle_url('/local/solalerts/index.php'),
