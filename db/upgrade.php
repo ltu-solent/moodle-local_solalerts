@@ -23,14 +23,18 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
-
+/**
+ * Upgrade function
+ *
+ * @param int $version
+ * @return bool
+ */
 function xmldb_local_solalerts_upgrade($version) {
     global $DB;
     $dbman = $DB->get_manager();
-    if ($version < 2022060603) {
+    if ($version < 2022060605) {
         $table = new xmldb_table('local_solalerts');
-        $field = new xmldb_field('filters', XMLDB_TYPE_TEXT, null, null, false, null);
+        $field = new xmldb_field('filters', XMLDB_TYPE_TEXT, null, null, false, null, null, 'pagetype');
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }
@@ -40,13 +44,13 @@ function xmldb_local_solalerts_upgrade($version) {
         $alerts = $DB->get_records('local_solalerts');
         foreach ($alerts as $alert) {
             $filter = [];
-            // Userprofilefield: fieldname=value
-            if (!empty($alert->userprofilefield)) {
+            // Userprofilefield: fieldname=value.
+            if (!empty(trim($alert->userprofilefield))) {
                 [$fieldname, $fieldvalue] = explode('=', $alert->userprofilefield);
                 $field = $DB->get_record('user_info_field', ['shortname' => $fieldname]);
                 if ($field) {
                     $upf = (object)[
-                        'op' => 2, // Equals
+                        'op' => 2, // Equals.
                         'fld' => $field->id,
                         'value' => trim($fieldvalue)
                     ];
@@ -55,11 +59,11 @@ function xmldb_local_solalerts_upgrade($version) {
             }
             // Rolesincourse & Rolesinsystem: A list of comma separated ids.
             // Let's keep this the same so we can target multiple roles.
-            if (!empty($alert->rolesincourse)) {
+            if (!empty(trim($alert->rolesincourse))) {
                 $filter['rolesincourse'] = $alert->rolesincourse;
             }
-            if (!empty($alert->rolesinsystem)) {
-                $filter['rolesinsystem'] = $alert->rolesinsystem;
+            if (!empty(trim($alert->rolesinsystems))) {
+                $filter['rolesinsystem'] = $alert->rolesinsystems;
             }
 
             if (!empty($alert->coursefield)) {
@@ -67,7 +71,7 @@ function xmldb_local_solalerts_upgrade($version) {
                 $field = $DB->get_record('customfield_field', ['shortname' => $fieldname]);
                 if ($field) {
                     $ccf = (object)[
-                        'op' => 2, // Equals
+                        'op' => 2, // Equals.
                         'fld' => $field->id,
                         'value' => trim($fieldvalue)
                     ];
@@ -81,7 +85,7 @@ function xmldb_local_solalerts_upgrade($version) {
             $alert->timemodified = time();
             $DB->update_record('local_solalerts', $alert);
         }
-        $field = new xmldb_field('userprofileield');
+        $field = new xmldb_field('userprofilefield');
         if ($dbman->field_exists($table, $field)) {
             $dbman->drop_field($table, $field);
         }
@@ -89,7 +93,7 @@ function xmldb_local_solalerts_upgrade($version) {
         if ($dbman->field_exists($table, $field)) {
             $dbman->drop_field($table, $field);
         }
-        $field = new xmldb_field('rolesinsystem');
+        $field = new xmldb_field('rolesinsystems');
         if ($dbman->field_exists($table, $field)) {
             $dbman->drop_field($table, $field);
         }
@@ -97,5 +101,19 @@ function xmldb_local_solalerts_upgrade($version) {
         if ($dbman->field_exists($table, $field)) {
             $dbman->drop_field($table, $field);
         }
+        upgrade_plugin_savepoint(true, 2022060605, 'local', 'solalerts');
     }
+    if ($version < 2022060607) {
+        $table = new xmldb_table('local_solalerts');
+        $field = new xmldb_field('sortorder', XMLDB_TYPE_INTEGER, '4', true, false, null, '0', 'enabled');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+        $index = new xmldb_index('sortorder', XMLDB_INDEX_NOTUNIQUE, ['sortorder']);
+        if (!$dbman->index_exists($table, $index)) {
+            $dbman->add_index($table, $index);
+        }
+        upgrade_plugin_savepoint(true, 2022060607, 'local', 'solalerts');
+    }
+    return true;
 }

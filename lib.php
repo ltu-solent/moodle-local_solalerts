@@ -17,7 +17,7 @@
 /**
  * Lib file for callbacks
  *
- * @package   local_solalert
+ * @package   local_solalerts
  * @author    Mark Sharp <mark.sharp@solent.ac.uk>
  * @copyright 2022 Solent University {@link https://www.solent.ac.uk}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -26,91 +26,83 @@
 use local_solalerts\api;
 use local_solalerts\solalert;
 
+/**
+ * Hook for the theme to display qualifying alerts.
+ *
+ * @param array $alerts Pass through existing alerts
+ * @return array new alerts
+ */
 function local_solalerts_solentzone_alerts($alerts) {
-    global $COURSE, $DB, $PAGE, $USER;
-    $pagetype = 'page-' . $PAGE->pagetype;
-    $validpagetypes = \local_solalerts\api::pagetypes_menu();
-    $sas = $DB->get_records('local_solalerts', ['contenttype' => solalert::CONTENTTYPE_ALERT, 'enabled' => true]);
+    global $COURSE, $DB, $PAGE;
+    $sas = $DB->get_records('local_solalerts', ['contenttype' => solalert::CONTENTTYPE_ALERT, 'enabled' => true], 'sortorder ASC');
     foreach ($sas as $sa) {
-        $validpagetype = $validtimeframe = $validuser = $validcoursefield = $validuserfield = true;
-        if ($sa->pagetype != '' && $pagetype != $sa->pagetype) {
-            continue;
-        }
-        if (!isset($validpagetypes[$sa->pagetype])) {
-            continue;
-        }
-        if ($sa->displayfrom > 0 && $sa->displayfrom > time()) {
-            $validtimeframe = false;
-        }
-        if ($sa->displayto > 0 && $sa->displayto < time()) {
-            $validtimeframe = false;
-        }
-        if (!$validtimeframe) {
-            continue;
-        }
-        if ($sa->coursefield != '') {
-            if (strpos($pagetype, 'page-course-view') === false) {
-                continue;
-            }
-            $handler = \core_customfield\handler::get_handler('core_course', 'course');
-            $datas = $handler->get_instance_data($COURSE->id);
-            [$fieldname, $fieldvalue] = explode('=', $sa->coursefield);
-            $hasmatch = false;
-            foreach ($datas as $data) {
-                if ($data->get_field()->get('shortname') != $fieldname) {
-                    continue;
-                }
-                if ($data->get_value() != $fieldvalue) {
-                    continue;
-                }
-                $hasmatch = true;
-                break;
-            }
-            if (!$hasmatch) {
-                continue;
-            }
-        }
-
-        if ($sa->userprofilefield != '') {
-            [$fieldname, $fieldvalue] = explode('=', $sa->userprofilefield);
-            if (!isset($USER->profile[$fieldname])) {
-                continue;
-            }
-            if ($USER->profile[$fieldname] != $fieldvalue) {
-                continue;
-            }
-        }
-        // Perhaps check capability rather than role.
-        if ($sa->rolesincourse != '') {
-            $rolesincourse = explode(',', $sa->rolesincourse);
-            // We need to allow checking parent context, as the person may be viewing an activity,
-            // and the parent is the course.
-            $userroles = get_user_roles($PAGE->context, $USER->id);
-            $hasroles = array_filter($userroles, function($role) use ($rolesincourse) {
-                return in_array($role->roleid, $rolesincourse);
-            });
-            if (count($hasroles) == 0) {
-                continue;
-            }
-        }
-        if ($sa->rolesinsystems != '') {
-            $rolesinsystems = explode(',', $sa->rolesinsystems);
-            $userroles = get_user_roles(context_system::instance(), $USER->id, false);
-            $hasroles = array_filter($userroles, function($role) use ($rolesinsystems) {
-                return in_array($role->roleid, $rolesinsystems);
-            });
-            if (count($hasroles) == 0) {
-                continue;
-            }
-        }
-        $display = ($validpagetype && $validtimeframe && $validcoursefield && $validuser);
+        $display = api::can_display($sa, $PAGE->pagetype, $PAGE->context, $COURSE->id);
         if ($display) {
-            $alerts[] = new \core\output\notification(clean_text($sa->content, FORMAT_PLAIN), $sa->alerttype);
+            $alerts[] = new \core\output\notification(format_text(clean_text($sa->content, FORMAT_PLAIN)), $sa->alerttype);
         }
     }
     return $alerts;
 }
 
-function local_solalerts_solentzone_banners($banners) {
-    return $banners;
+/**
+ * Fetch all notices that can be displayed to this user in this context
+ *
+ * @param array $notices
+ * @return array New notices
+ */
+function local_solalerts_solentzone_notices($notices) {
+    global $COURSE, $DB, $PAGE;
+    $sas = $DB->get_records('local_solalerts', ['contenttype' => solalert::CONTENTTYPE_NOTICE, 'enabled' => true], 'sortorder ASC');
+    foreach ($sas as $sa) {
+        $display = api::can_display($sa, $PAGE->pagetype, $PAGE->context, $COURSE->id);
+        if ($display) {
+            $sa->content = file_rewrite_pluginfile_urls(
+                // The content of the text stored in the database.
+                $sa->content,
+                // The pluginfile URL which will serve the request.
+                'pluginfile.php',
+                // The combination of contextid / component / filearea / itemid
+                // form the virtual bucket that file are stored in.
+                context_system::instance()->id,
+                'local_solalerts',
+                'alert',
+                $sa->id
+            );
+            $notices[] = format_text($sa->content);
+        }
+    }
+    return $notices;
+}
+
+/**
+ * Convert pluginfile urls into real urls
+ *
+ * @param stdClass $course
+ * @param stdClass $cm
+ * @param context $context
+ * @param string $filearea
+ * @param array $args
+ * @param bool $forcedownload
+ * @param array $options
+ * @return stored_file|bool
+ */
+function local_solalerts_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options=array()) {
+
+    if ($filearea != 'alert') {
+        return false;
+    }
+    $itemid = array_shift($args);
+    $filename = array_pop($args);
+    if (empty($args)) {
+        $filepath = '/';
+    } else {
+        $filepath = '/' . implode('/', $args) . '/';
+    }
+
+    $fs = get_file_storage();
+    $file = $fs->get_file($context->id, 'local_solalerts', $filearea, $itemid, $filepath, $filename);
+    if (!$file) {
+        return false;
+    }
+    send_stored_file($file, 0, 0, $forcedownload, $options);
 }

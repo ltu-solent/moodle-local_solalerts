@@ -28,12 +28,14 @@ defined('MOODLE_INTERNAL') || die();
 $string['actions'] = 'Actions';
 $string['alert'] = 'Alert';
 $string['alerttype'] = 'Alert type';
-$string['alerttype_help'] = 'Alert types will display with different coloured text. Use the most appropriate.';
+$string['alerttype_help'] = 'Alert types will display with different coloured text. Use the most appropriate.
+    Note: This only applies to the "Alert" Content type.';
 
 $string['banner'] = 'Banner';
 
 $string['choosealerttype'] = 'Choose alert type';
 $string['choosepagetype'] = 'Choose page type';
+$string['cohort'] = 'Cohort';
 $string['confirmdelete'] = 'Confirm deletion of "{$a}"';
 $string['content'] = 'Alert content';
 $string['content_help'] = 'Depending on the content type, the content will be put in different containers.
@@ -46,7 +48,7 @@ $string['coursefield_help'] = 'Specify the coursefield shortname followed by equ
 e.g. faculty=FBLDT';
 $string['coursefilterfield'] = 'Custom course field name';
 $string['coursefilterlimiter'] = 'Custom course field operator';
-$string['courselabel'] = '{$a->label}: {$a->field} {$a->operator} {$a->value}';
+$string['courselabel'] = '{$a->label}: "{$a->field}" {$a->operator} "{$a->value}"';
 $string['courselabelnovalue'] = '{$a->label}: {$a->field} {$a->operator}';
 $string['courseroles'] = 'Course roles';
 
@@ -54,10 +56,14 @@ $string['delete'] = 'Delete';
 $string['deleted'] = '"{$a}" has been deleted.';
 $string['deleteduser'] = 'Deleted user';
 $string['displayconditions'] = 'Display conditions';
+$string['displayconditions_desc'] = '<p><strong>All</strong> specified conditions must apply before an alert is displayed.
+    Be aware it\'s possible to have contradictory display conditions or conditions that don\'t apply in the specified context.</p>
+    <p>For example: filters pertaining to Courses (course custom fields, course roles) will not work on the Dashboard.</p>';
 $string['displayfrom'] = 'Display from';
 $string['displayto'] = 'Display to';
 
 $string['edit'] = 'Edit';
+$string['edittitle'] = 'Edit {$a}';
 $string['editsolalert'] = 'Edit SolAlert';
 $string['enabled'] = 'Enabled';
 
@@ -75,6 +81,7 @@ $string['newsolalert'] = 'Create new alert';
 $string['notenabled'] = 'Not enabled';
 $string['notice'] = 'Notice';
 
+$string['page-my-index'] = 'Dashboard';
 $string['pagetype'] = 'Pagetype';
 $string['pagetype_help'] = 'The pagetype is the id of the body element in the html e.g. on the Dashboard, the pagetype is "page-my-index"';
 $string['pagetyperequired'] = 'You must specify a pagetype - this is to prevent messages showing on every page.';
@@ -85,12 +92,12 @@ $string['privacy:metadata'] = 'The local_solalert Sol Alert plugin does not stor
 
 $string['solalerts'] = 'SolAlerts';
 $string['solalerts:managealerts'] = 'Manage alerts';
+$string['sortorder'] = 'Sort order';
 $string['systemroles'] = 'System roles';
 
 $string['title'] = 'Title';
 
 $string['updated'] = '"{$a}" has been updated.';
-$string['userfilter'] = 'User filter';
 $string['userprofilefield'] = 'User profile field';
 $string['userprofilefield_help'] = 'Specify the user profile field shortname followed by equals followed by the value.
 e.g. faculty=FBLDT';

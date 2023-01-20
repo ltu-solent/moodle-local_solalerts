@@ -27,10 +27,35 @@ namespace local_solalerts\filters;
 
 use stdClass;
 
+/**
+ * Complex form element for filtering by Course field
+ */
 class course_filter_customfield {
+    /**
+     * Field name
+     *
+     * @var string
+     */
     public $name;
+    /**
+     * Field label
+     *
+     * @var string
+     */
     public $label;
+    /**
+     * Is this an advanced field type
+     *
+     * @var bool
+     */
     public $advanced;
+    /**
+     * Constructor
+     *
+     * @param string $name
+     * @param string $label
+     * @param bool $advanced
+     */
     public function __construct($name, $label, $advanced) {
         $this->name     = $name;
         $this->label    = $label;
@@ -52,18 +77,33 @@ class course_filter_customfield {
                      7 => get_string('isdefined', 'filters'));
     }
 
+    /**
+     * Get a menu of available custom fields
+     *
+     * @return array
+     */
     public function get_custom_fields(): array {
         global $DB;
-        $sql = "SELECT f.id, CONCAT(cat.name, ': ', f.name) `name`
+        $sql = "SELECT f.id, CONCAT(cat.name, ': ', f.name) name
         FROM {customfield_category} cat
         JOIN {customfield_field} f ON f.categoryid = cat.id
         WHERE cat.component = 'core_course' AND cat.area = 'course'";
         $fieldrecords = $DB->get_records_sql($sql);
+        $fields = [];
+        foreach ($fieldrecords as $fieldrecord) {
+            $fields[$fieldrecord->id] = $fieldrecord->name;
+        }
         $res = [0 => get_string('anyfield', 'filters')];
-        return $res + $fieldrecords;
+        return $res + $fields;
     }
 
-    public function setupForm(&$mform) {
+    /**
+     * Setup the form element.
+     *
+     * @param object $mform
+     * @return void
+     */
+    public function setupForm(&$mform) { // phpcs:ignore
         $customfields = $this->get_custom_fields();
         if (empty($customfields)) {
             return;
@@ -82,6 +122,12 @@ class course_filter_customfield {
         }
     }
 
+    /**
+     * Check the data is formatted correctly
+     *
+     * @param stdClass $formdata
+     * @return array Formated formdata
+     */
     public function check_data($formdata) {
         $customfields = $this->get_custom_fields();
         if (empty($customfields)) {
@@ -102,6 +148,12 @@ class course_filter_customfield {
         }
     }
 
+    /**
+     * Get SQL fragment for filtering
+     *
+     * @param array $data
+     * @return array [SQL, params]
+     */
     public function get_sql_filter($data) {
         global $DB;
         static $counter = 0;
@@ -167,6 +219,12 @@ class course_filter_customfield {
         return ["id $op (SELECT instanceid FROM {customfield_data} $where) ", $params];
     }
 
+    /**
+     * Get display label
+     *
+     * @param array $data
+     * @return string
+     */
     public function get_label($data) {
         $operators = $this->get_operators();
         $customfields = $this->get_custom_fields();
@@ -184,7 +242,7 @@ class course_filter_customfield {
         $a = new stdClass();
         $a->label    = $this->label;
         $a->value    = $value;
-        $a->profile  = $customfields[$fieldid];
+        $a->field  = $customfields[$fieldid];
         $a->operator = $operators[$operator];
 
         switch($operator) {

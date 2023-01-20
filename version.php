@@ -25,7 +25,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2022060602;
+$plugin->version   = 2022060607;
 $plugin->release   = 2022060600;
 $plugin->requires  = 2020061500;
 $plugin->component = 'local_solalerts';

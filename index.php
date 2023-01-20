@@ -24,18 +24,20 @@
  */
 
 require_once('../../config.php');
-require_login(null, false);
-require_capability('local/solalerts:managealerts', context_system::instance());
-$context = context_system::instance();
+require_once($CFG->libdir . '/adminlib.php');
 
+$context = context_system::instance();
+$url = new moodle_url('/local/solalerts/index.php');
+admin_externalpage_setup('solalerts', null, null, $url);
 $PAGE->set_context($context);
 $PAGE->set_heading(get_string('pluginname', 'local_solalerts'));
 $PAGE->set_pagelayout('admin');
 $PAGE->set_title(get_string('pluginname', 'local_solalerts'));
-$PAGE->set_url($CFG->wwwroot.'/local/solalerts/index.php');
+$PAGE->set_url($url);
 
 echo $OUTPUT->header();
 
+echo clean_text(get_string('displayconditions_desc', 'local_solalerts'));
 $new = new action_link(new moodle_url('/local/solalerts/edit.php', ['action' => 'new']),
     get_string('newsolalert', 'local_solalerts'), null,
     ['class' => 'btn btn-primary'],

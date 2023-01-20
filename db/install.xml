@@ -17,6 +17,7 @@
         <FIELD NAME="displayfrom" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" DEFAULT="0" />
         <FIELD NAME="displayto" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" DEFAULT="0" />
         <FIELD NAME="enabled" TYPE="int" LENGTH="1" NOTNULL="false" SEQUENCE="false" DEFAULT="0" />
+        <FIELD NAME="sortorder" TYPE="int" LENGTH="4" NOTNULL="false" SEQUENCE="false" DEFAULT="0" UNSIGNED="true" />
         <FIELD NAME="usermodified" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" DEFAULT="0" />
         <FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" DEFAULT="0" />
         <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" DEFAULT="0" />
@@ -27,6 +28,7 @@
       <INDEXES>
         <INDEX NAME="contenttype" UNIQUE="false" FIELDS="contenttype"/>
         <INDEX NAME="enabled" UNIQUE="false" FIELDS="enabled,displayfrom,displayto"/>
+        <INDEX NAME="sortorder" UNIQUE="false" FIELDS="sortorder" />
       </INDEXES>
     </TABLE>
   </TABLES>

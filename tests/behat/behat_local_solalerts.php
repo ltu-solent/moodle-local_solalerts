@@ -29,6 +29,9 @@ use Behat\Gherkin\Node\PyStringNode as PyStringNode;
 use Behat\Gherkin\Node\TableNode;
 use local_solalerts\solalert;
 
+/**
+ * Steps for solalerts
+ */
 class behat_local_solalerts extends behat_base {
     /**
      * Create a new solalert in the database.

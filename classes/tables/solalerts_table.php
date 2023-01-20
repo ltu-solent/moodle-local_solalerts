@@ -32,14 +32,41 @@ use context_system;
 use core_user;
 use html_writer;
 use lang_string;
+use local_solalerts\filters\course_filter_customfield;
 use moodle_url;
 use table_sql;
+use user_filter_cohort;
+use user_filter_profilefield;
+use user_filter_text;
 
+/**
+ * Solalerts table for listing all available solalerts
+ */
 class solalerts_table extends table_sql {
 
+    /**
+     * Pagetypes menu
+     *
+     * @var array
+     */
     private $pagetypes = [];
+    /**
+     * System roles menu
+     *
+     * @var array
+     */
     private $systemroles = [];
+    /**
+     * Course roles menu
+     *
+     * @var array
+     */
     private $courseroles = [];
+    /**
+     * Constructor
+     *
+     * @param string $uniqueid
+     */
     public function __construct($uniqueid) {
         parent::__construct($uniqueid);
         $this->useridfield = 'modifiedby';
@@ -52,6 +79,7 @@ class solalerts_table extends table_sql {
             'contenttype',
             'displayconditions',
             'enabled',
+            'sortorder',
             'usermodified',
             'timemodified',
             'actions'
@@ -63,6 +91,7 @@ class solalerts_table extends table_sql {
             new lang_string('contenttype', 'local_solalerts'),
             new lang_string('displayconditions', 'local_solalerts'),
             new lang_string('enabled', 'local_solalerts'),
+            new lang_string('sortorder', 'local_solalerts'),
             new lang_string('modifiedby', 'local_solalerts'),
             new lang_string('lastmodified', 'local_solalerts'),
             new lang_string('actions', 'local_solalerts'),
@@ -72,25 +101,56 @@ class solalerts_table extends table_sql {
         $this->define_headers($columnheadings);
         $this->no_sorting('actions');
         $this->no_sorting('displayconditions');
-        $this->sortable(true, 'id');
+        $this->sortable(true, 'id', SORT_DESC);
         $this->collapsible(false);
+        $this->column_style('sortorder', 'text-align', 'center');
 
         $this->define_baseurl(new moodle_url("/local/solalerts/index.php"));
         $where = '1=1';
         $this->set_sql('*', "{local_solalerts}", $where);
     }
 
+    /**
+     * Actions column
+     *
+     * @param stdClass $col
+     * @return string HTML formatted column data
+     */
+    public function col_actions($col) {
+        $params = ['action' => 'edit', 'id' => $col->id];
+        $edit = new moodle_url('/local/solalerts/edit.php', $params);
+        $html = html_writer::link($edit, get_string('edit'));
+
+        $params['action'] = 'delete';
+        $delete = new moodle_url('/local/solalerts/edit.php', $params);
+        $html .= " " . html_writer::link($delete, get_string('delete'));
+        return $html;
+    }
+
+    /**
+     * Content type column
+     *
+     * @param stdClass $col
+     * @return string HTML formatted column data
+     */
     public function col_contenttype($col) {
         $contenttype = $col->contenttype;
-        $html = $contenttype;
+        $html = ucfirst($contenttype);
         if ($contenttype == \local_solalerts\solalert::CONTENTTYPE_ALERT) {
-            $html .= '<br /><small>' . $col->alerttype . '</small>';
+            $html .= '<br /><small>' . ucfirst($col->alerttype) . '</small>';
         }
         return $html;
     }
 
+    /**
+     * Display conditions column
+     *
+     * @param stdClass $col
+     * @return string HTML formatted column data
+     */
     public function col_displayconditions($col) {
         $items = [];
+        $filters = json_decode($col->filters);
         if ($col->pagetype != '') {
             $pagetype = $col->pagetype;
             if (isset($this->pagetypes[$pagetype])) {
@@ -98,14 +158,65 @@ class solalerts_table extends table_sql {
             }
             $items[] = get_string('pagetype', 'local_solalerts') . ': ' . $pagetype;
         }
-        if ($col->userprofilefield != '') {
-            $items[] = get_string('userprofilefield', 'local_solalerts') . ': ' . $col->userprofilefield;
+        if (isset($filters->userprofilefield->value) && $filters->userprofilefield->value != '') {
+            $profilefield = new user_filter_profilefield('userprofilefield', get_string('profilefields', 'admin'), false);
+            $fielddata = [
+                'profile' => $filters->userprofilefield->fld,
+                'value' => $filters->userprofilefield->value,
+                'operator' => $filters->userprofilefield->op
+            ];
+            $item = $profilefield->get_label($fielddata);
+            if (!empty($item)) {
+                $items[] = $item;
+            }
         }
-        if ($col->coursefield != '') {
-            $items[] = get_string('coursefield', 'local_solalerts') . ': ' . $col->coursefield;
+        if (isset($filters->coursecustomfield->value) && $filters->coursecustomfield->value != '') {
+            $customfield = new course_filter_customfield('coursecustomfield', get_string('coursefield', 'local_solalerts'), false);
+            $fielddata = [
+                'fieldid' => $filters->coursecustomfield->fld,
+                'value' => $filters->coursecustomfield->value,
+                'operator' => $filters->coursecustomfield->op
+            ];
+            $item = $customfield->get_label($fielddata);
+            if (!empty($item)) {
+                $items[] = $item;
+            }
         }
-        if ($col->rolesincourse != '') {
-            $roles = explode(',', $col->rolesincourse);
+        if (isset($filters->institution->value) && $filters->institution->value != '') {
+            $institution = new user_filter_text('institution', get_string('institution'), false, 'institution');
+            $fielddata = [
+                'value' => $filters->institution->value,
+                'operator' => $filters->institution->op
+            ];
+            $item = $institution->get_label($fielddata);
+            if (!empty($item)) {
+                $items[] = $item;
+            }
+        }
+        if (isset($filters->department->value) && $filters->department->value != '') {
+            $department = new user_filter_text('department', get_string('department'), false, 'department');
+            $fielddata = [
+                'value' => $filters->department->value,
+                'operator' => $filters->department->op
+            ];
+            $item = $department->get_label($fielddata);
+            if (!empty($item)) {
+                $items[] = $item;
+            }
+        }
+        if (isset($filters->cohort->value) && $filters->cohort->value != '') {
+            $cohort = new user_filter_cohort(false);
+            $fielddata = [
+                'value' => $filters->cohort->value,
+                'operator' => $filters->cohort->op
+            ];
+            $item = $cohort->get_label($fielddata);
+            if (!empty($item)) {
+                $items[] = $item;
+            }
+        }
+        if (isset($filters->rolesincourse) && $filters->rolesincourse != '') {
+            $roles = explode(',', $filters->rolesincourse);
             $rolenames = [];
             foreach ($roles as $role) {
                 if (isset($this->courseroles[$role])) {
@@ -116,8 +227,8 @@ class solalerts_table extends table_sql {
                 $items[] = get_string('courseroles', 'local_solalerts') . ': ' . join(', ', $rolenames);
             }
         }
-        if ($col->rolesinsystems != '') {
-            $roles = explode(',', $col->rolesinsystems);
+        if (isset($filters->rolesinsystem) && $filters->rolesinsystem != '') {
+            $roles = explode(',', $filters->rolesinsystem);
             $rolenames = [];
             foreach ($roles as $role) {
                 if (isset($this->systemroles[$role])) {
@@ -137,31 +248,51 @@ class solalerts_table extends table_sql {
         return html_writer::alist($items);
     }
 
+    /**
+     * Enabled column
+     *
+     * @param stdClass $col
+     * @return string HTML formatted column data
+     */
     public function col_enabled($col) {
         return ($col->enabled) ? new lang_string('enabled', 'local_solalerts')
             : new lang_string('notenabled', 'local_solalerts');
     }
 
+    /**
+     * Time modified column
+     *
+     * @param stdClass $col
+     * @return string HTML formatted column data
+     */
+    public function col_timemodified($col) {
+        return userdate($col->timemodified, get_string('strftimedatetimeshort', 'core_langconfig'));
+    }
+
+    /**
+     * Title column
+     *
+     * @param stdClass $col
+     * @return string HTML formatted column data
+     */
+    public function col_title($col) {
+        $params = ['action' => 'edit', 'id' => $col->id];
+        $edit = new moodle_url('/local/solalerts/edit.php', $params);
+        $html = html_writer::link($edit, $col->title, ['title' => get_string('edittitle', 'local_solalerts', $col->title)]);
+        return $html;
+    }
+
+    /**
+     * User modified column
+     *
+     * @param stdClass $col
+     * @return string HTML formatted column data
+     */
     public function col_usermodified($col) {
         $modifiedby = core_user::get_user($col->usermodified);
         if (!$modifiedby || $modifiedby->deleted) {
             return get_string('deleteduser', 'local_solalerts');
         }
         return fullname($modifiedby);
-    }
-
-    public function col_timemodified($col) {
-        return userdate($col->timemodified, get_string('strftimedatetimeshort', 'core_langconfig'));
-    }
-
-    public function col_actions($col) {
-        $params = ['action' => 'edit', 'id' => $col->id];
-        $edit = new moodle_url('/local/solalerts/edit.php', $params);
-        $html = html_writer::link($edit, get_string('edit'));
-
-        $params['action'] = 'delete';
-        $delete = new moodle_url('/local/solalerts/edit.php', $params);
-        $html .= " " . html_writer::link($delete, get_string('delete'));
-        return $html;
     }
 }

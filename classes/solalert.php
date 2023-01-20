@@ -28,11 +28,26 @@ namespace local_solalerts;
 use core\persistent;
 use lang_string;
 
+/**
+ * Solalert persisten object
+ */
 class solalert extends persistent {
 
+    /**
+     * Table used by this class
+     */
     const TABLE = 'local_solalerts';
+    /**
+     * Alert content type
+     */
     public const CONTENTTYPE_ALERT = 'alert';
+    /**
+     * Banner content type
+     */
     public const CONTENTTYPE_BANNER = 'banner';
+    /**
+     * Notice content type
+     */
     public const CONTENTTYPE_NOTICE = 'notice';
 
     /**
@@ -94,29 +109,20 @@ class solalert extends persistent {
             'enabled' => [
                 'type' => PARAM_BOOL,
                 'default' => false
+            ],
+            'sortorder' => [
+                'type' => PARAM_INT,
+                'default' => 0
             ]
         ];
     }
 
-    protected function validate_coursefield($value) {
-        global $DB;
-        if ($value == '') {
-            return true;
-        }
-        if (strpos($value, '=') === false) {
-            return new lang_string('invalidfieldformat', 'local_solalerts');
-        }
-        [$key, $value] = explode('=', $value);
-        $sql = "SELECT f.id
-        FROM {customfield_field} f
-        JOIN {customfield_category} c ON c.id=f.categoryid
-        WHERE f.shortname = :shortname AND c.component='core_course' AND c.area='course'";
-        if (!$DB->record_exists_sql($sql, ['shortname' => $key])) {
-            return new lang_string('invalidfield', 'local_solalerts', $key);
-        }
-        return true;
-    }
-
+    /**
+     * Validate the page type
+     *
+     * @param string $value
+     * @return bool|lang_string
+     */
     protected function validate_pagetype($value) {
         $pagetypes = \local_solalerts\api::pagetypes_menu();
         if (!in_array($value, array_keys($pagetypes))) {
@@ -126,8 +132,14 @@ class solalert extends persistent {
         return true;
     }
 
+    /**
+     * Validate roles in course
+     *
+     * @param string $value
+     * @return bool|lang_string
+     */
     protected function validate_rolesincourse($value) {
-        return true;
+        return true; // TODO: Why are we not validating?
         if ($value == '') {
             return true;
         }
@@ -145,8 +157,14 @@ class solalert extends persistent {
         return true;
     }
 
-    protected function validate_rolesinsystems($value) {
-        return true;
+    /**
+     * Validate rolesinsystem
+     *
+     * @param string $value
+     * @return bool|lang_string
+     */
+    protected function validate_rolesinsystem($value) {
+        return true; // TODO: Why are we not validating?
         if ($value == '') {
             return true;
         }
@@ -164,25 +182,13 @@ class solalert extends persistent {
         return true;
     }
 
-    protected function validate_userprofilefield($value) {
-        global $DB;
-        if ($value == '') {
-            return true;
-        }
-        // if (strpos($value, '=') === false) {
-        //     return new lang_string('invalidfieldformat', 'local_solalerts');
-        // }
-        // [$key, $value] = explode('=', $value);
-        // if (!$DB->record_exists('user_info_field', ['shortname' => $key])) {
-        //     return new lang_string('invalidfield', 'local_solalerts', $key);
-        // }
-        return true;
-    }
-
+    /**
+     * Don't thin I need this
+     *
+     * @return string decoded json object
+     */
     protected function get_userprofilefield() {
-        error_log(print_r($this->raw_get('userprofilefield'), true));
         $decode = json_decode($this->raw_get('userprofilefield'));
-        // $decode = $this->raw_get('userprofilefield');
         return $decode;
     }
 }

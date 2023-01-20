@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+use local_solalerts\solalert;
+
 /**
  * Generator for SolAlerts
  *
@@ -22,9 +24,13 @@
  * @copyright 2022 Solent University {@link https://www.solent.ac.uk}
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
 class local_solalerts_generator extends component_generator_base {
 
+    /**
+     * Alert count
+     *
+     * @var integer
+     */
     public $alertcount = 0;
     /**
      * Reset process.
@@ -37,7 +43,62 @@ class local_solalerts_generator extends component_generator_base {
         $this->alertcount = 0;
     }
 
-    public function create_solalert($data) {
+    /**
+     * Create a solalert from record fragment
+     *
+     * @param stdClass $record
+     * @return local_solalerts\solalert
+     */
+    public function create_solalert($record = null) {
+        global $USER;
+        $this->alertcount++;
+        $record = (object)(array)$record;
         // Fills in any missing data required.
+        if (!isset($record->title)) {
+            $record->title = 'Alert' . $this->alertcount;
+        }
+        if (!isset($record->content)) {
+            $record->content = 'Alert ' . $this->alertcount . ' content.';
+        }
+        if (!isset($record->contentformat)) {
+            $record->contentformat = FORMAT_HTML;
+        }
+        if (!isset($record->contenttype)) {
+            $record->contenttype = solalert::CONTENTTYPE_ALERT;
+        }
+        if ($record->contenttype == solalert::CONTENTTYPE_ALERT) {
+            if (!isset($record->alerttype)) {
+                $record->alerttype = \core\notification::INFO;
+            }
+        } else {
+            $record->alerttype = '';
+        }
+        if (!isset($record->pagetype)) {
+            $record->pagetype = 'page-my-index';
+        }
+        if (!isset($record->displayfrom)) {
+            $record->displayfrom = 0;
+        }
+        if (!isset($record->displayto)) {
+            $record->displayto = 0;
+        }
+        if (!isset($record->enabled)) {
+            $record->enabled = 1;
+        }
+        if (!isset($record->usermodified)) {
+            $record->usermodified = $USER->id;
+        }
+        if (!isset($record->timecreated)) {
+            $record->timecreated = time();
+        }
+        if (!isset($record->timemodified)) {
+            $record->timemodified = time();
+        }
+        // For the purposes of ease here, accept filters as an array, (fill in the gaps?) and jsonencode.
+        $filters = $record->filters ?? [];
+        $record->filters = json_encode($filters);
+        $solalert = new solalert(0, $record);
+        $solalert->create();
+        return $solalert;
     }
 }

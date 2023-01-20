@@ -49,7 +49,6 @@ $pageparams = [
 $solalert = null;
 $form = null;
 
-
 if ($action == 'edit' || $action == 'delete') {
     if ($id == 0) {
         throw new moodle_exception('invalidid');
@@ -57,8 +56,9 @@ if ($action == 'edit' || $action == 'delete') {
 } else {
     $action = 'new';
 }
-
+$editoroptions = ['maxfiles' => -1, 'noclean' => true, 'context' => context_system::instance()];
 $solalert = new solalert($id);
+
 $customdata = [
     'persistent' => $solalert,
     'userid' => $USER->id
@@ -78,19 +78,54 @@ $form = new solalert_form($PAGE->url->out(false), $customdata);
 if ($form->is_cancelled()) {
     redirect(new moodle_url('/local/solalerts/index.php'));
 }
+
 if ($formdata = $form->get_data()) {
     if (empty($formdata->id)) {
         $solalert = new solalert(0, $formdata);
         $solalert->create();
+        $data = new stdClass();
+        $data->id = $solalert->get('id');
+        $data->contentformat = FORMAT_HTML;
+        $data->content_editor = [
+            'text' => $solalert->get('content'),
+            'format' => FORMAT_HTML,
+            'itemid' => $solalert->get('id')
+        ];
+        $data = file_postupdate_standard_editor($data, 'content', $editoroptions,
+            $context, 'local_solalerts', 'alert', $solalert->get('id'));
+        $solalert->set('content', $data->content);
+        $solalert->update();
         redirect(new moodle_url('/local/solalerts/index.php'),
             get_string('newsaved', 'local_solalerts'),
             null,
             \core\output\notification::NOTIFY_SUCCESS);
     } else {
         $solalert = new solalert($formdata->id);
+
         if ($action == 'edit') {
-            error_log(print_r($formdata, true));
             $solalert->from_record($formdata);
+            $data = new stdClass();
+            $data->id = $solalert->get('id');
+            $data->content = $solalert->get('content');
+            $data->content_editor = [
+                'text' => $solalert->get('content'),
+                'format' => FORMAT_HTML,
+                'itemid' => $solalert->get('id')
+            ];
+            $data->contentformat = FORMAT_HTML;
+            $data = file_postupdate_standard_editor(
+                $data,
+                // The field name in the database.
+                'content',
+                $editoroptions,
+                // The combination of contextid, component, filearea, and itemid.
+                context_system::instance(),
+                'local_solalerts',
+                'alert',
+                $solalert->get('id')
+            );
+            // Set image file urls to @@PLUGINFILE@@ etc.
+            $solalert->set('content', $data->content);
             $solalert->update();
             redirect(new moodle_url('/local/solalerts/index.php'),
                 get_string('updated', 'local_solalerts', $formdata->title),
