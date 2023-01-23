@@ -39,6 +39,38 @@ require_once($CFG->dirroot . '/user/filters/profilefield.php');
 class api {
 
     /**
+     * Contains
+     */
+    const TEXT_FILTER_CONTAINS = 0;
+    /**
+     * Does not contain
+     */
+    const TEXT_FILTER_DOESNOTCONTAIN = 1;
+    /**
+     * Is equals to
+     */
+    const TEXT_FILTER_ISEQUALSTO = 2;
+    /**
+     * Start with
+     */
+    const TEXT_FILTER_STARTSWITH = 3;
+    /**
+     * Ends with
+     */
+    const TEXT_FILTER_ENDSWITH = 4;
+    /**
+     * Is empty
+     */
+    const TEXT_FILTER_ISEMPTY = 5;
+    /**
+     * Is not defined
+     */
+    const TEXT_FILTER_ISNOTDEFINED = 6;
+    /**
+     * Is defined
+     */
+    const TEXT_FILTER_ISDEFINED = 7;
+    /**
      * Gets a list of roles for either the system or course context.
      *
      * @param int $contextlevel
@@ -107,8 +139,8 @@ class api {
      * @return boolean
      */
     public static function can_display($sa, $pagetype, $pagecontext, $courseid = 0) {
-        global $DB, $USER;
-        $pagetype = 'page-' . $pagetype;
+        global $COURSE, $DB, $USER;
+        $pagetype = (strpos($pagetype, 'page-') === 0) ? $pagetype : 'page-' . $pagetype;
         $validpagetypes = self::pagetypes_menu();
         $validpagetype = $validtimeframe = $validuser = $validcoursefield = $validuserfield = true;
         $filters = json_decode($sa->filters);

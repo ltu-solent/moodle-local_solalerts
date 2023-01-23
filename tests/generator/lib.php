@@ -94,9 +94,9 @@ class local_solalerts_generator extends component_generator_base {
         if (!isset($record->timemodified)) {
             $record->timemodified = time();
         }
-        // For the purposes of ease here, accept filters as an array, (fill in the gaps?) and jsonencode.
-        $filters = $record->filters ?? [];
-        $record->filters = json_encode($filters);
+        // Assume filters is already json encoded.
+        $filters = $record->filters ?? '';
+        $record->filters = $filters;
         $solalert = new solalert(0, $record);
         $solalert->create();
         return $solalert;

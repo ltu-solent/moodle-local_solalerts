@@ -44,27 +44,28 @@ Feature: View SolAlerts
     | contenttype       | alert |
     | alerttype         | success |
     | pagetype          | page-mod-page-view |
+    | filters           | |
     | enabled           | 1 |
     And the following solalert alert exists:
     | title             | Page view for students |
     | content           | Students are viewing a page |
     | alerttype         | warning |
     | pagetype          | page-mod-page-view |
-    | rolesincourse     | student |
+    | filters           | {"rolesincourse": "student"} |
     | enabled           | 1 |
     And the following solalert alert exists:
     | title             | Page view for teachers |
     | content           | Teachers are viewing a page |
     | alerttype         | warning |
     | pagetype          | page-mod-page-view |
-    | rolesincourse     | editingteacher |
+    | filters           | {"rolesincourse": "editingteacher"} |
     | enabled           | 1 |
     And the following solalert alert exists:
     | title             | Assign view for External Examiners |
     | content           | External Examiners are viewing an assignment |
     | alerttype         | info |
     | pagetype          | page-mod-assign-view |
-    | rolesincourse     | ee |
+    | filters           | {"rolesincourse": "ee"} |
     | enabled           | 1 |
     And the following solalert alert exists:
     | title             | Dashboard view for All |
@@ -89,7 +90,7 @@ Feature: View SolAlerts
     When I am on "Course 1" course homepage
     And I click on "Test assignment name" "link"
     Then I should not see "External Examiners are viewing an assignment"
-    When I follow "Dashboard" in the user menu
+    When I visit "/my"
     Then I should see "All users are viewing the dashboard"
     And I should not see "No-one is viewing this alert"
     # Teacher
@@ -102,7 +103,7 @@ Feature: View SolAlerts
     When I am on "Course 1" course homepage
     And I click on "Test assignment name" "link"
     Then I should not see "External Examiners are viewing an assignment"
-    When I follow "Dashboard" in the user menu
+    When I visit "/my"
     Then I should see "All users are viewing the dashboard"
     And I should not see "No-one is viewing this alert"
     # External Examiner
@@ -115,6 +116,6 @@ Feature: View SolAlerts
     When I am on "Course 1" course homepage
     And I click on "Test assignment name" "link"
     Then I should see "External Examiners are viewing an assignment"
-    When I follow "Dashboard" in the user menu
+    When I visit "/my"
     Then I should see "All users are viewing the dashboard"
     And I should not see "No-one is viewing this alert"
