@@ -29,10 +29,10 @@
  * @param int $version
  * @return bool
  */
-function xmldb_local_solalerts_upgrade($version) {
+function xmldb_local_solalerts_upgrade($oldversion) {
     global $DB;
     $dbman = $DB->get_manager();
-    if ($version < 2022060605) {
+    if ($oldversion < 2022060605) {
         $table = new xmldb_table('local_solalerts');
         $field = new xmldb_field('filters', XMLDB_TYPE_TEXT, null, null, false, null, null, 'pagetype');
         if (!$dbman->field_exists($table, $field)) {
@@ -103,7 +103,7 @@ function xmldb_local_solalerts_upgrade($version) {
         }
         upgrade_plugin_savepoint(true, 2022060605, 'local', 'solalerts');
     }
-    if ($version < 2022060607) {
+    if ($oldversion < 2022060607) {
         $table = new xmldb_table('local_solalerts');
         $field = new xmldb_field('sortorder', XMLDB_TYPE_INTEGER, '4', true, false, null, '0', 'enabled');
         if (!$dbman->field_exists($table, $field)) {

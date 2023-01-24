@@ -44,28 +44,27 @@ Feature: View SolAlerts
     | contenttype       | alert |
     | alerttype         | success |
     | pagetype          | page-mod-page-view |
-    | filters           | |
     | enabled           | 1 |
     And the following solalert alert exists:
     | title             | Page view for students |
     | content           | Students are viewing a page |
     | alerttype         | warning |
     | pagetype          | page-mod-page-view |
-    | filters           | {"rolesincourse": "student"} |
+    | rolesincourse     | student |
     | enabled           | 1 |
     And the following solalert alert exists:
     | title             | Page view for teachers |
     | content           | Teachers are viewing a page |
     | alerttype         | warning |
     | pagetype          | page-mod-page-view |
-    | filters           | {"rolesincourse": "editingteacher"} |
+    | rolesincourse     | editingteacher |
     | enabled           | 1 |
     And the following solalert alert exists:
     | title             | Assign view for External Examiners |
     | content           | External Examiners are viewing an assignment |
     | alerttype         | info |
     | pagetype          | page-mod-assign-view |
-    | filters           | {"rolesincourse": "ee"} |
+    | rolesincourse     | ee |
     | enabled           | 1 |
     And the following solalert alert exists:
     | title             | Dashboard view for All |

@@ -27,6 +27,7 @@ require_once(__DIR__ . '/../../../../lib/behat/behat_base.php');
 
 use Behat\Gherkin\Node\PyStringNode as PyStringNode;
 use Behat\Gherkin\Node\TableNode;
+use local_solalerts\api;
 use local_solalerts\solalert;
 
 /**
@@ -88,14 +89,38 @@ class behat_local_solalerts extends behat_base {
         if (!isset($pagetypes[$solalert->pagetype])) {
             throw new Exception('An incorrect page type has been specified (' . $solalert->pagetype . ')');
         }
-        $filters = new stdClass();
-        if (isset($solalert->filters)) {
-            $decoded = json_decode($solalert->filters);
-        }
-        if (isset($decoded->rolesincourse)) {
+        // Default values.
+        $filters = (object)[
+            'rolesincourse' => '',
+            'rolesinsystem' => '',
+            'userprofilefield' => (object)[
+                'op' => api::TEXT_FILTER_CONTAINS,
+                'fld' => '',
+                'value' => ''
+            ],
+            'coursecustomfield' => (object)[
+                'op' => api::TEXT_FILTER_CONTAINS,
+                'fld' => '',
+                'value' => ''
+            ],
+            'department' => (object)[
+                'op' => api::TEXT_FILTER_CONTAINS,
+                'value' => ''
+            ],
+            'institution' => (object)[
+                'op' => api::TEXT_FILTER_CONTAINS,
+                'value' => ''
+            ],
+            'cohort' => (object)[
+                'op' => api::TEXT_FILTER_CONTAINS,
+                'value' => ''
+            ]
+        ];
+
+        if (isset($solalert->rolesincourse)) {
             $roles = $DB->get_records('role');
             $availableroles = local_solalerts\api::availableroles(CONTEXT_COURSE);
-            $rolenamelist = explode(',', $decoded->rolesincourse);
+            $rolenamelist = explode(',', $solalert->rolesincourse);
             // Validate the shortname is correct and create a list of ids.
             $validroles = array_filter($roles, function($role) use ($rolenamelist, $availableroles) {
                 if (!isset($availableroles[$role->id])) {
@@ -105,13 +130,11 @@ class behat_local_solalerts extends behat_base {
             });
             $roleids = join(',', array_keys($validroles));
             $filters->rolesincourse = $roleids;
-        } else {
-            $filters->rolesincourse = '';
         }
 
-        if (isset($decoded->rolesinsystem)) {
+        if (isset($solalert->rolesinsystem)) {
             $availableroles = local_solalerts\api::availableroles(CONTEXT_COURSE);
-            $rolenamelist = explode(',', $decoded->rolesinsystem);
+            $rolenamelist = explode(',', $solalert->rolesinsystem);
             // Validate the shortname is correct and create a list of ids.
             $validroles = array_filter($roles, function($role) use ($rolenamelist, $availableroles) {
                 if (!isset($availableroles[$role->id])) {
@@ -121,9 +144,59 @@ class behat_local_solalerts extends behat_base {
             });
             $roleids = join(',', array_keys($validroles));
             $filters->rolesinsystem = $roleids;
-        } else {
-            $filters->rolesinsystem = '';
         }
+
+        if (isset($solalert->userprofilefield_op)) {
+            $filters->userprofilefield['op'] = $solalert->userprofilefield_op;
+        }
+        if (isset($solalert->userprofilefield_fld)) {
+            // Fetch fieldid from field shortname;
+            $shortname = $solalert->userprofilefield_fld;
+            $field = $DB->get_record('user_info_field', ['shortname' => $shortname]);
+            if (!$field) {
+                throw new Exception("User profile field {$shortname}");
+            }
+            $filters->userprofilefield['fld'] = $field->id;
+        }
+        if (isset($solalert->userprofilefield)) {
+            $filters->userprofilefield['value'] = $solalert->userprofilefield;
+        }
+
+        if (isset($solalert->coursecustomfield_op)) {
+            $filters->coursecustomfield['op'] = $solalert->coursecustomfield_op;
+        }
+        if (isset($solalert->coursecustomfield_fld)) {
+            $shortname = $solalert->coursecustomfield_fld;
+            $field = $DB->get_record('customfield_field', [
+                'shortname' => $shortname
+            ]);
+            $filters->coursecustomfield['fld'] = $field->id;
+        }
+        if (isset($solalert->coursecustomfield)) {
+            $filters->coursecustomfield['value'] = $solalert->coursecustomfield;
+        }
+
+        if (isset($solalert->department_op)) {
+            $filters->deparment['op'] = $solalert->department_op;
+        }
+        if (isset($solalert->department)) {
+            $filters->department['value'] = $solalert->department;
+        }
+
+        if (isset($solalert->institution_op)) {
+            $filters->instituion['op'] = $solalert->institution_op;
+        }
+        if (isset($solalert->institution)) {
+            $filters->institution['value'] = $solalert->institution;
+        }
+
+        if (isset($solalert->cohort_op)) {
+            $filters->cohort['op'] = $solalert->cohort_op;
+        }
+        if (isset($solalert->cohort)) {
+            $filters->cohort['value'] = $solalert->cohort;
+        }
+
         // Try to encode it. If this fails, return empty string.
         $encoded = json_encode($filters);
         if ($encoded) {
