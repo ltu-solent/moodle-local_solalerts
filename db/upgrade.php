@@ -26,7 +26,7 @@
 /**
  * Upgrade function
  *
- * @param int $version
+ * @param int $oldversion
  * @return bool
  */
 function xmldb_local_solalerts_upgrade($oldversion) {

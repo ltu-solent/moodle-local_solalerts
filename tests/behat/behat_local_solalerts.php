@@ -150,7 +150,7 @@ class behat_local_solalerts extends behat_base {
             $filters->userprofilefield['op'] = $solalert->userprofilefield_op;
         }
         if (isset($solalert->userprofilefield_fld)) {
-            // Fetch fieldid from field shortname;
+            // Fetch fieldid from field shortname.
             $shortname = $solalert->userprofilefield_fld;
             $field = $DB->get_record('user_info_field', ['shortname' => $shortname]);
             if (!$field) {
