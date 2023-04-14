@@ -34,7 +34,9 @@ defined('MOODLE_INTERNAL') || die();
 
 global $CFG;
 
-/** Test the api class */
+/** Test the api class
+ * @group sol
+ */
 class api_test extends advanced_testcase {
     /**
      * Test whether an alert can be displayed in the provided context.
