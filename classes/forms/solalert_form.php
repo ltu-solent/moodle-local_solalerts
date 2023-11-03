@@ -199,7 +199,11 @@ class solalert_form extends persistentform {
      */
     protected function get_default_data() {
         $data = parent::get_default_data();
-        $filters = json_decode($this->get_persistent()->get('filters'));
+        $getfilters = $this->get_persistent()->get('filters');
+        $filters = null;
+        if ($getfilters) {
+            $filters = json_decode($getfilters);
+        }
         $data->rolesincourse = $filters->rolesincourse ?? [];
         $data->rolesinsystem = $filters->rolesinsystem ?? [];
 
