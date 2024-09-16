@@ -171,7 +171,7 @@ class api {
             $fielddata = [
                 'fieldid' => $filters->coursecustomfield->fld,
                 'value' => $filters->coursecustomfield->value,
-                'operator' => $filters->coursecustomfield->op
+                'operator' => $filters->coursecustomfield->op,
             ];
             [$sql, $params] = $customfield->get_sql_filter($fielddata);
             if (empty($sql)) {
@@ -192,7 +192,7 @@ class api {
             $fielddata = [
                 'profile' => $filters->userprofilefield->fld,
                 'value' => $filters->userprofilefield->value,
-                'operator' => $filters->userprofilefield->op
+                'operator' => $filters->userprofilefield->op,
             ];
             [$sql, $params] = $profilefield->get_sql_filter($fielddata);
             if (empty($sql)) {
@@ -234,7 +234,7 @@ class api {
             $department = new user_filter_text('department', get_string('department'), false, 'department');
             $fielddata = [
                 'operator' => $filters->department->op,
-                'value' => $filters->department->value
+                'value' => $filters->department->value,
             ];
             [$sql, $params] = $department->get_sql_filter($fielddata);
             if (empty($sql)) {
@@ -252,7 +252,7 @@ class api {
             $institution = new user_filter_text('institution', get_string('institution'), false, 'institution');
             $fielddata = [
                 'operator' => $filters->institution->op,
-                'value' => $filters->institution->value
+                'value' => $filters->institution->value,
             ];
             [$sql, $params] = $institution->get_sql_filter($fielddata);
             if (empty($sql)) {
@@ -270,7 +270,7 @@ class api {
             $cohort = new user_filter_cohort('cohort', get_string('cohort', 'local_solalerts'), false, 'cohort');
             $fielddata = [
                 'operator' => $filters->cohort->op,
-                'value' => $filters->cohort->value
+                'value' => $filters->cohort->value,
             ];
             [$sql, $params] = $cohort->get_sql_filter($fielddata);
             if (empty($sql)) {

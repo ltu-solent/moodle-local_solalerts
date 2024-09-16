@@ -52,7 +52,7 @@ function xmldb_local_solalerts_upgrade($oldversion) {
                     $upf = (object)[
                         'op' => 2, // Equals.
                         'fld' => $field->id,
-                        'value' => trim($fieldvalue)
+                        'value' => trim($fieldvalue),
                     ];
                     $filter['userprofilefield'] = $upf;
                 }
@@ -73,7 +73,7 @@ function xmldb_local_solalerts_upgrade($oldversion) {
                     $ccf = (object)[
                         'op' => 2, // Equals.
                         'fld' => $field->id,
-                        'value' => trim($fieldvalue)
+                        'value' => trim($fieldvalue),
                     ];
                     $filter['coursecustomfield'] = $ccf;
                 }

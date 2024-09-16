@@ -84,7 +84,7 @@ class solalerts_table extends table_sql {
             'sortorder',
             'usermodified',
             'timemodified',
-            'actions'
+            'actions',
         ];
 
         $columnheadings = [
@@ -176,7 +176,7 @@ class solalerts_table extends table_sql {
             $fielddata = [
                 'profile' => $filters->userprofilefield->fld,
                 'value' => $filters->userprofilefield->value,
-                'operator' => $filters->userprofilefield->op
+                'operator' => $filters->userprofilefield->op,
             ];
             $item = $profilefield->get_label($fielddata);
             if (!empty($item)) {
@@ -188,7 +188,7 @@ class solalerts_table extends table_sql {
             $fielddata = [
                 'fieldid' => $filters->coursecustomfield->fld,
                 'value' => $filters->coursecustomfield->value,
-                'operator' => $filters->coursecustomfield->op
+                'operator' => $filters->coursecustomfield->op,
             ];
             $item = $customfield->get_label($fielddata);
             if (!empty($item)) {
@@ -199,7 +199,7 @@ class solalerts_table extends table_sql {
             $institution = new user_filter_text('institution', get_string('institution'), false, 'institution');
             $fielddata = [
                 'value' => $filters->institution->value,
-                'operator' => $filters->institution->op
+                'operator' => $filters->institution->op,
             ];
             $item = $institution->get_label($fielddata);
             if (!empty($item)) {
@@ -210,7 +210,7 @@ class solalerts_table extends table_sql {
             $department = new user_filter_text('department', get_string('department'), false, 'department');
             $fielddata = [
                 'value' => $filters->department->value,
-                'operator' => $filters->department->op
+                'operator' => $filters->department->op,
             ];
             $item = $department->get_label($fielddata);
             if (!empty($item)) {
@@ -221,7 +221,7 @@ class solalerts_table extends table_sql {
             $cohort = new user_filter_cohort(false);
             $fielddata = [
                 'value' => $filters->cohort->value,
-                'operator' => $filters->cohort->op
+                'operator' => $filters->cohort->op,
             ];
             $item = $cohort->get_label($fielddata);
             if (!empty($item)) {

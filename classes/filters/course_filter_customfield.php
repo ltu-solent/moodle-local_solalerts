@@ -67,14 +67,16 @@ class course_filter_customfield {
      * @return array of comparison operators
      */
     public function get_operators() {
-        return array(0 => get_string('contains', 'filters'),
-                     1 => get_string('doesnotcontain', 'filters'),
-                     2 => get_string('isequalto', 'filters'),
-                     3 => get_string('startswith', 'filters'),
-                     4 => get_string('endswith', 'filters'),
-                     5 => get_string('isempty', 'filters'),
-                     6 => get_string('isnotdefined', 'filters'),
-                     7 => get_string('isdefined', 'filters'));
+        return [
+            0 => get_string('contains', 'filters'),
+            1 => get_string('doesnotcontain', 'filters'),
+            2 => get_string('isequalto', 'filters'),
+            3 => get_string('startswith', 'filters'),
+            4 => get_string('endswith', 'filters'),
+            5 => get_string('isempty', 'filters'),
+            6 => get_string('isnotdefined', 'filters'),
+            7 => get_string('isdefined', 'filters'),
+        ];
     }
 
     /**
@@ -142,9 +144,11 @@ class course_filter_customfield {
                 return false;
             }
 
-            return array('value'    => (string)$formdata->$field,
-                         'operator' => (int)$formdata->$operator,
-                         'fieldid'  => (int)$formdata->$fieldid);
+            return [
+                'value'    => (string)$formdata->$field,
+                'operator' => (int)$formdata->$operator,
+                'fieldid'  => (int)$formdata->$fieldid,
+            ];
         }
     }
 

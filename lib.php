@@ -86,7 +86,7 @@ function local_solalerts_solentzone_notices($notices) {
  * @param array $options
  * @return stored_file|bool
  */
-function local_solalerts_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options=array()) {
+function local_solalerts_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options = []) {
 
     if ($filearea != 'alert') {
         return false;

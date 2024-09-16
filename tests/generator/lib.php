@@ -29,7 +29,7 @@ class local_solalerts_generator extends component_generator_base {
     /**
      * Alert count
      *
-     * @var integer
+     * @var int
      */
     public $alertcount = 0;
     /**

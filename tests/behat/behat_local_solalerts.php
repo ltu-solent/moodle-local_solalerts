@@ -96,25 +96,25 @@ class behat_local_solalerts extends behat_base {
             'userprofilefield' => (object)[
                 'op' => api::TEXT_FILTER_CONTAINS,
                 'fld' => '',
-                'value' => ''
+                'value' => '',
             ],
             'coursecustomfield' => (object)[
                 'op' => api::TEXT_FILTER_CONTAINS,
                 'fld' => '',
-                'value' => ''
+                'value' => '',
             ],
             'department' => (object)[
                 'op' => api::TEXT_FILTER_CONTAINS,
-                'value' => ''
+                'value' => '',
             ],
             'institution' => (object)[
                 'op' => api::TEXT_FILTER_CONTAINS,
-                'value' => ''
+                'value' => '',
             ],
             'cohort' => (object)[
                 'op' => api::TEXT_FILTER_CONTAINS,
-                'value' => ''
-            ]
+                'value' => '',
+            ],
         ];
 
         if (isset($solalert->rolesincourse)) {
@@ -168,7 +168,7 @@ class behat_local_solalerts extends behat_base {
         if (isset($solalert->coursecustomfield_fld)) {
             $shortname = $solalert->coursecustomfield_fld;
             $field = $DB->get_record('customfield_field', [
-                'shortname' => $shortname
+                'shortname' => $shortname,
             ]);
             $filters->coursecustomfield['fld'] = $field->id;
         }

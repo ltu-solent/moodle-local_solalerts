@@ -76,7 +76,7 @@ class solalert_form extends persistentform {
 
         $choices = [
             solalert::CONTENTTYPE_ALERT => new lang_string('alert', 'local_solalerts'),
-            solalert::CONTENTTYPE_NOTICE => new lang_string('notice', 'local_solalerts')
+            solalert::CONTENTTYPE_NOTICE => new lang_string('notice', 'local_solalerts'),
         ];
         $mform->addElement('select', 'contenttype', new lang_string('contenttype', 'local_solalerts'), $choices);
         $mform->addRule('contenttype', $required, 'required', null, 'client');
@@ -87,7 +87,7 @@ class solalert_form extends persistentform {
             \core\notification::ERROR => new lang_string('error'),
             \core\notification::INFO => new lang_string('info'),
             \core\notification::SUCCESS => new lang_string('success'),
-            \core\notification::WARNING => new lang_string('warning')
+            \core\notification::WARNING => new lang_string('warning'),
         ];
         $mform->addElement('select', 'alerttype', new lang_string('alerttype', 'local_solalerts'), $choices);
         $mform->hideIf('alerttype', 'contenttype', 'neq', solalert::CONTENTTYPE_ALERT);
@@ -118,7 +118,7 @@ class solalert_form extends persistentform {
             'department' => 1,
             'institution' => 1,
             'cohort' => 1,
-            'coursecustomfield' => 1
+            'coursecustomfield' => 1,
         ];
 
         $this->_fields = [];
@@ -168,25 +168,25 @@ class solalert_form extends persistentform {
             'userprofilefield' => (object)[
                 'op' => $data->userprofilefield_op,
                 'fld' => $data->userprofilefield_fld,
-                'value' => $data->userprofilefield
+                'value' => $data->userprofilefield,
             ],
             'coursecustomfield' => (object)[
                 'op' => $data->coursecustomfield_op,
                 'fld' => $data->coursecustomfield_fld,
-                'value' => $data->coursecustomfield
+                'value' => $data->coursecustomfield,
             ],
             'department' => (object)[
                 'op' => $data->department_op,
-                'value' => $data->department
+                'value' => $data->department,
             ],
             'institution' => (object)[
                 'op' => $data->institution_op,
-                'value' => $data->institution
+                'value' => $data->institution,
             ],
             'cohort' => (object)[
                 'op' => $data->cohort_op,
-                'value' => $data->cohort
-            ]
+                'value' => $data->cohort,
+            ],
         ];
         $data->filters = json_encode($filters);
         return $data;

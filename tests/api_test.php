@@ -34,7 +34,10 @@ defined('MOODLE_INTERNAL') || die();
 
 global $CFG;
 
+require_once($CFG->dirroot . '/local/solalerts/tests/generator/lib.php');
+
 /** Test the api class
+ *
  * @group sol
  */
 class api_test extends advanced_testcase {
@@ -53,6 +56,7 @@ class api_test extends advanced_testcase {
     public function test_can_display($pagetype, $filters, $displayfrom, $displayto, $enabled) {
         global $DB;
         $this->resetAfterTest();
+        /** @var local_solalerts_generator $solgen */
         $solgen = $this->getDataGenerator()->get_plugin_generator('local_solalerts');
         // Set up users, courses, activities.
         // User to match conditions.
@@ -63,7 +67,7 @@ class api_test extends advanced_testcase {
         $profilefield = $this->getDataGenerator()->create_custom_profile_field([
             'datatype' => 'text',
             'name' => 'Test profile field',
-            'shortname' => 'testprofilefield'
+            'shortname' => 'testprofilefield',
         ]);
         // Set up course custom fields.
         $customcat = $this->getDataGenerator()->create_custom_field_category(['name' => 'customcat']);
@@ -73,7 +77,7 @@ class api_test extends advanced_testcase {
             'datatype' => 'text',
             'categoryid' => $customcat->get('id'),
             'component' => 'core_course', // This is by default, but just in case it changes.
-            'area' => 'course'
+            'area' => 'course',
         ]);
         $matchcohort = $this->getDataGenerator()->create_cohort();
         $mismatchcohort = $this->getDataGenerator()->create_cohort();
@@ -101,7 +105,7 @@ class api_test extends advanced_testcase {
 
             $matchcoursedata['customfields'][] = [
                 'shortname' => 'coursecustomfield',
-                'value' => $filters['coursecustomfield']['value']
+                'value' => $filters['coursecustomfield']['value'],
             ];
         }
         if (isset($filters['userprofilefield'])) {
@@ -111,7 +115,7 @@ class api_test extends advanced_testcase {
         $mismatchuserdata = [
             'department' => $randomstring,
             'institution' => $randomstring,
-            'profile_field_testprofilefield' => $randomstring
+            'profile_field_testprofilefield' => $randomstring,
         ];
 
         $solalert = $solgen->create_solalert([
@@ -119,7 +123,7 @@ class api_test extends advanced_testcase {
             'filters' => json_encode($filters),
             'displayfrom' => $displayfrom,
             'displayto' => $displayto,
-            'enabled' => $enabled
+            'enabled' => $enabled,
         ]);
         $solrecord = $solalert->to_record();
         $matchuser = $this->getDataGenerator()->create_user($matchuserdata);
@@ -165,40 +169,40 @@ class api_test extends advanced_testcase {
      *
      * @return array
      */
-    public function can_display_provider() {
+    public static function can_display_provider(): array {
         return [
             'department=student' => [
                 'pagetype' => 'page-my-index',
                 'filters' => [
                     'department' => [
                         'op' => api::TEXT_FILTER_CONTAINS,
-                        'value' => 'student'
-                    ]
+                        'value' => 'student',
+                    ],
                 ],
                 'displayfrom' => 0,
                 'displayto' => 0,
-                'enabled' => 1
+                'enabled' => 1,
             ],
             'institution=academic' => [
                 'pagetype' => 'page-my-index',
                 'filters' => [
                     'institution' => [
                         'op' => api::TEXT_FILTER_CONTAINS,
-                        'value' => 'academic'
-                    ]
+                        'value' => 'academic',
+                    ],
                 ],
                 'displayfrom' => 0,
                 'displayto' => 0,
-                'enabled' => 1
+                'enabled' => 1,
             ],
             'courseview-student' => [
                 'pagetype' => 'page-course-view',
                 'filters' => [
-                    'rolesincourse' => 'student'
+                    'rolesincourse' => 'student',
                 ],
                 'displayfrom' => 0,
                 'displayto' => 0,
-                'enabled' => 1
+                'enabled' => 1,
             ],
             'pagetype=module' => [
                 'pagetype' => 'page-course-view',
@@ -206,12 +210,12 @@ class api_test extends advanced_testcase {
                     'coursecustomfield' => [
                         'op' => api::TEXT_FILTER_CONTAINS,
                         'value' => 'module',
-                    ]
+                    ],
                 ],
                 'displayfrom' => 0,
                 'displayto' => 0,
-                'enabled' => 1
-            ]
+                'enabled' => 1,
+            ],
         ];
     }
 

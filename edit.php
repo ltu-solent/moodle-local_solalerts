@@ -43,7 +43,7 @@ if (!in_array($action, ['edit', 'delete', 'new'])) {
 }
 $pageparams = [
     'action' => $action,
-    'id' => $id
+    'id' => $id,
 ];
 
 $solalert = null;
@@ -51,7 +51,7 @@ $form = null;
 
 if ($action == 'edit' || $action == 'delete') {
     if ($id == 0) {
-        throw new moodle_exception('invalidid');
+        throw new moodle_exception('invalidid', 'local_solalerts');
     }
 } else {
     $action = 'new';
@@ -61,7 +61,7 @@ $solalert = new solalert($id);
 
 $customdata = [
     'persistent' => $solalert,
-    'userid' => $USER->id
+    'userid' => $USER->id,
 ];
 
 if ($confirmdelete && confirm_sesskey()) {
@@ -89,7 +89,7 @@ if ($formdata = $form->get_data()) {
         $data->content_editor = [
             'text' => $solalert->get('content'),
             'format' => FORMAT_HTML,
-            'itemid' => $solalert->get('id')
+            'itemid' => $solalert->get('id'),
         ];
         $data = file_postupdate_standard_editor($data, 'content', $editoroptions,
             $context, 'local_solalerts', 'alert', $solalert->get('id'));
@@ -110,7 +110,7 @@ if ($formdata = $form->get_data()) {
             $data->content_editor = [
                 'text' => $solalert->get('content'),
                 'format' => FORMAT_HTML,
-                'itemid' => $solalert->get('id')
+                'itemid' => $solalert->get('id'),
             ];
             $data->contentformat = FORMAT_HTML;
             $data = file_postupdate_standard_editor(
@@ -147,7 +147,7 @@ if ($action == 'delete') {
         'action' => 'delete',
         'confirmdelete' => true,
         'id' => $id,
-        'sesskey' => sesskey()
+        'sesskey' => sesskey(),
     ]);
     $deletebutton = new single_button($deleteurl, get_string('delete'));
     echo $OUTPUT->confirm(

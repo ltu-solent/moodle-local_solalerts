@@ -32,6 +32,6 @@ $capabilities = [
         'riskbitmask' => RISK_XSS,
         'archetypes' => [
             'manager' => CAP_ALLOW,
-        ]
-    ]
+        ],
+    ],
 ];

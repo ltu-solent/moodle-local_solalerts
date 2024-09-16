@@ -59,16 +59,16 @@ class solalert extends persistent {
         return [
             'title' => [
                 'type' => PARAM_TEXT,
-                'null' => NULL_NOT_ALLOWED
+                'null' => NULL_NOT_ALLOWED,
             ],
             'content' => [
                 'type' => PARAM_RAW,
-                'null' => NULL_NOT_ALLOWED
+                'null' => NULL_NOT_ALLOWED,
             ],
             'contentformat' => [
-                'choices' => array(FORMAT_HTML, FORMAT_MOODLE, FORMAT_PLAIN, FORMAT_MARKDOWN),
+                'choices' => [FORMAT_HTML, FORMAT_MOODLE, FORMAT_PLAIN, FORMAT_MARKDOWN],
                 'type' => PARAM_INT,
-                'default' => FORMAT_HTML
+                'default' => FORMAT_HTML,
             ],
             'contenttype' => [
                 'type' => PARAM_ALPHA,
@@ -76,8 +76,8 @@ class solalert extends persistent {
                 'choices' => [
                     self::CONTENTTYPE_ALERT,
                     self::CONTENTTYPE_BANNER,
-                    self::CONTENTTYPE_NOTICE
-                ]
+                    self::CONTENTTYPE_NOTICE,
+                ],
             ],
             'alerttype' => [
                 'type' => PARAM_ALPHA,
@@ -86,34 +86,34 @@ class solalert extends persistent {
                     \core\notification::ERROR,
                     \core\notification::INFO,
                     \core\notification::SUCCESS,
-                    \core\notification::WARNING
-                ]
+                    \core\notification::WARNING,
+                ],
             ],
             'pagetype' => [
                 'type' => PARAM_RAW,
                 'null' => NULL_NOT_ALLOWED,
-                'choices' => \local_solalerts\api::pagetypes_menu(true)
+                'choices' => \local_solalerts\api::pagetypes_menu(true),
             ],
             'filters' => [
                 'type' => PARAM_RAW,
-                'null' => NULL_ALLOWED
+                'null' => NULL_ALLOWED,
             ],
             'displayfrom' => [
                 'type' => PARAM_INT,
-                'null' => NULL_ALLOWED
+                'null' => NULL_ALLOWED,
             ],
             'displayto' => [
                 'type' => PARAM_INT,
-                'null' => NULL_ALLOWED
+                'null' => NULL_ALLOWED,
             ],
             'enabled' => [
                 'type' => PARAM_BOOL,
-                'default' => false
+                'default' => false,
             ],
             'sortorder' => [
                 'type' => PARAM_INT,
-                'default' => 0
-            ]
+                'default' => 0,
+            ],
         ];
     }
 
@@ -139,7 +139,7 @@ class solalert extends persistent {
      * @return bool|lang_string
      */
     protected function validate_rolesincourse($value) {
-        return true; // TODO: Why are we not validating?
+        return true; // Why are we not validating?
         if ($value == '') {
             return true;
         }
@@ -164,7 +164,7 @@ class solalert extends persistent {
      * @return bool|lang_string
      */
     protected function validate_rolesinsystem($value) {
-        return true; // TODO: Why are we not validating?
+        return true; // Why are we not validating?
         if ($value == '') {
             return true;
         }
