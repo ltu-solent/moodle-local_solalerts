@@ -29,6 +29,7 @@ defined('MOODLE_INTERNAL') || die();
 require_once("$CFG->libdir/tablelib.php");
 
 use context_system;
+use core_text;
 use core_user;
 use html_writer;
 use lang_string;
@@ -76,6 +77,7 @@ class solalerts_table extends table_sql {
         $columns = [
             'id',
             'title',
+            'content',
             'contenttype',
             'displayconditions',
             'enabled',
@@ -88,6 +90,7 @@ class solalerts_table extends table_sql {
         $columnheadings = [
             'id',
             new lang_string('title', 'local_solalerts'),
+            new lang_string('content', 'local_solalerts'),
             new lang_string('contenttype', 'local_solalerts'),
             new lang_string('displayconditions', 'local_solalerts'),
             new lang_string('enabled', 'local_solalerts'),
@@ -125,6 +128,16 @@ class solalerts_table extends table_sql {
         $delete = new moodle_url('/local/solalerts/edit.php', $params);
         $html .= " " . html_writer::link($delete, get_string('delete'));
         return $html;
+    }
+
+    /**
+     * Output some of the alert content as a taster, but shortened
+     *
+     * @param stdClass $col
+     * @return string HTML formatted column data
+     */
+    public function col_content($col) {
+        return shorten_text(format_text($col->content, FORMAT_HTML), 150);
     }
 
     /**
