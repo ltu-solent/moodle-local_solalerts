@@ -103,8 +103,9 @@ class solalerts_table extends table_sql {
         $this->define_columns($columns);
         $this->define_headers($columnheadings);
         $this->no_sorting('actions');
+        $this->no_sorting('content');
         $this->no_sorting('displayconditions');
-        $this->sortable(true, 'id', SORT_DESC);
+        $this->sortable(true, 'lastmodified', SORT_DESC);
         $this->collapsible(false);
         $this->column_style('sortorder', 'text-align', 'center');
 
