@@ -86,14 +86,14 @@ class course_filter_customfield {
      */
     public function get_custom_fields(): array {
         global $DB;
-        $sql = "SELECT f.id, CONCAT(cat.name, ': ', f.name) name
+        $sql = "SELECT f.id, cat.name catname, f.name fieldname
         FROM {customfield_category} cat
         JOIN {customfield_field} f ON f.categoryid = cat.id
         WHERE cat.component = 'core_course' AND cat.area = 'course'";
         $fieldrecords = $DB->get_records_sql($sql);
         $fields = [];
         foreach ($fieldrecords as $fieldrecord) {
-            $fields[$fieldrecord->id] = $fieldrecord->name;
+            $fields[$fieldrecord->id] = $fieldrecord->catname . ': ' . $fieldrecord->fieldname;
         }
         $res = [0 => get_string('anyfield', 'filters')];
         return $res + $fields;
