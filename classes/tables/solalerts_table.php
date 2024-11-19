@@ -29,7 +29,6 @@ defined('MOODLE_INTERNAL') || die();
 require_once("$CFG->libdir/tablelib.php");
 
 use context_system;
-use core_text;
 use core_user;
 use html_writer;
 use lang_string;
@@ -138,7 +137,20 @@ class solalerts_table extends table_sql {
      * @return string HTML formatted column data
      */
     public function col_content($col) {
-        return shorten_text(format_text($col->content, FORMAT_HTML), 150);
+        $content = $col->content;
+        $content = file_rewrite_pluginfile_urls(
+            // The content of the text stored in the database.
+            $content,
+            // The pluginfile URL which will serve the request.
+            'pluginfile.php',
+            // The combination of contextid / component / filearea / itemid
+            // form the virtual bucket that file are stored in.
+            context_system::instance()->id,
+            'local_solalerts',
+            'alert',
+            $col->id
+        );
+        return shorten_text(format_text($content, FORMAT_HTML), 150);
     }
 
     /**
