@@ -40,7 +40,7 @@ require_once($CFG->dirroot . '/local/solalerts/tests/generator/lib.php');
  *
  * @group sol
  */
-class api_test extends advanced_testcase {
+final class api_test extends advanced_testcase {
     /**
      * Test whether an alert can be displayed in the provided context.
      * @covers \local_solalerts\api::candisplay
@@ -53,7 +53,7 @@ class api_test extends advanced_testcase {
      *
      * @return void
      */
-    public function test_can_display($pagetype, $filters, $displayfrom, $displayto, $enabled) {
+    public function test_can_display($pagetype, $filters, $displayfrom, $displayto, $enabled): void {
         global $DB;
         $this->resetAfterTest();
         /** @var local_solalerts_generator $solgen */

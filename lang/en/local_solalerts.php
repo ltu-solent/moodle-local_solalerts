@@ -63,8 +63,8 @@ $string['displayfrom'] = 'Display from';
 $string['displayto'] = 'Display to';
 
 $string['edit'] = 'Edit';
-$string['edittitle'] = 'Edit {$a}';
 $string['editsolalert'] = 'Edit SolAlert';
+$string['edittitle'] = 'Edit {$a}';
 $string['enabled'] = 'Enabled';
 
 $string['invalidfield'] = 'Specified field ({$a}) does not exist.';
