@@ -23,57 +23,6 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-use local_solalerts\api;
-use local_solalerts\solalert;
-
-/**
- * Hook for the theme to display qualifying alerts.
- *
- * @param array $alerts Pass through existing alerts
- * @return array new alerts
- */
-function local_solalerts_solentzone_alerts($alerts) {
-    global $COURSE, $DB, $PAGE;
-    $sas = $DB->get_records('local_solalerts', ['contenttype' => solalert::CONTENTTYPE_ALERT, 'enabled' => true], 'sortorder ASC');
-    foreach ($sas as $sa) {
-        $display = api::can_display($sa, $PAGE->pagetype, $PAGE->context, $COURSE->id);
-        if ($display) {
-            $alerts[] = new \core\output\notification(format_text(clean_text($sa->content, FORMAT_PLAIN)), $sa->alerttype);
-        }
-    }
-    return $alerts;
-}
-
-/**
- * Fetch all notices that can be displayed to this user in this context
- *
- * @param array $notices
- * @return array New notices
- */
-function local_solalerts_solentzone_notices($notices) {
-    global $COURSE, $DB, $PAGE;
-    $sas = $DB->get_records('local_solalerts', ['contenttype' => solalert::CONTENTTYPE_NOTICE, 'enabled' => true], 'sortorder ASC');
-    foreach ($sas as $sa) {
-        $display = api::can_display($sa, $PAGE->pagetype, $PAGE->context, $COURSE->id);
-        if ($display) {
-            $sa->content = file_rewrite_pluginfile_urls(
-                // The content of the text stored in the database.
-                $sa->content,
-                // The pluginfile URL which will serve the request.
-                'pluginfile.php',
-                // The combination of contextid / component / filearea / itemid
-                // form the virtual bucket that file are stored in.
-                context_system::instance()->id,
-                'local_solalerts',
-                'alert',
-                $sa->id
-            );
-            $notices[] = format_text($sa->content);
-        }
-    }
-    return $notices;
-}
-
 /**
  * Convert pluginfile urls into real urls
  *
