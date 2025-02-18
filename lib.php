@@ -54,4 +54,5 @@ function local_solalerts_pluginfile($course, $cm, $context, $filearea, $args, $f
         return false;
     }
     send_stored_file($file, 0, 0, $forcedownload, $options);
+    return true;
 }

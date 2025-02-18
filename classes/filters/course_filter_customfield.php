@@ -128,7 +128,7 @@ class course_filter_customfield {
      * Check the data is formatted correctly
      *
      * @param stdClass $formdata
-     * @return array Formated formdata
+     * @return ?array|bool Formated formdata
      */
     public function check_data($formdata) {
         $customfields = $this->get_custom_fields();
