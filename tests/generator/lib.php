@@ -25,7 +25,6 @@ use local_solalerts\solalert;
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class local_solalerts_generator extends component_generator_base {
-
     /**
      * Alert count
      *

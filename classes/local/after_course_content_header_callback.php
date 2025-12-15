@@ -37,10 +37,14 @@ class after_course_content_header_callback {
     public static function callback(\local_solalerts\hook\after_course_content_header $hook): void {
         global $COURSE, $DB, $PAGE;
         // Solalerts.
-        $sas = $DB->get_records('local_solalerts', [
-            'contenttype' => solalert::CONTENTTYPE_ALERT,
-            'enabled' => true],
-            'sortorder ASC');
+        $sas = $DB->get_records(
+            'local_solalerts',
+            [
+                'contenttype' => solalert::CONTENTTYPE_ALERT,
+                'enabled' => true,
+            ],
+            'sortorder ASC'
+        );
         foreach ($sas as $sa) {
             $display = api::can_display($sa, $PAGE->pagetype, $PAGE->context, $COURSE->id);
             if ($display) {
@@ -49,10 +53,14 @@ class after_course_content_header_callback {
             }
         }
         // Notices.
-        $sas = $DB->get_records('local_solalerts', [
-            'contenttype' => solalert::CONTENTTYPE_NOTICE,
-            'enabled' => true],
-            'sortorder ASC');
+        $sas = $DB->get_records(
+            'local_solalerts',
+            [
+                'contenttype' => solalert::CONTENTTYPE_NOTICE,
+                'enabled' => true,
+            ],
+            'sortorder ASC'
+        );
         foreach ($sas as $sa) {
             $display = api::can_display($sa, $PAGE->pagetype, $PAGE->context, $COURSE->id);
             if ($display) {

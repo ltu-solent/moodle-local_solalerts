@@ -38,10 +38,13 @@ $PAGE->set_url($url);
 echo $OUTPUT->header();
 
 echo clean_text(get_string('displayconditions_desc', 'local_solalerts'));
-$new = new action_link(new moodle_url('/local/solalerts/edit.php', ['action' => 'new']),
-    get_string('newsolalert', 'local_solalerts'), null,
+$new = new action_link(
+    new moodle_url('/local/solalerts/edit.php', ['action' => 'new']),
+    get_string('newsolalert', 'local_solalerts'),
+    null,
     ['class' => 'btn btn-primary'],
-    new pix_icon('i/calendareventtime', null));
+    new pix_icon('i/calendareventtime', null)
+);
 echo $OUTPUT->render($new);
 
 $table = new \local_solalerts\tables\solalerts_table('solalerts');

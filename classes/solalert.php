@@ -32,7 +32,6 @@ use lang_string;
  * Solalert persisten object
  */
 class solalert extends persistent {
-
     /**
      * Table used by this class
      */

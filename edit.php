@@ -67,10 +67,12 @@ $customdata = [
 if ($confirmdelete && confirm_sesskey()) {
     $title = $solalert->get('title');
     $solalert->delete();
-    redirect(new moodle_url('/local/solalerts/index.php'),
+    redirect(
+        new moodle_url('/local/solalerts/index.php'),
         get_string('deleted', 'local_solalerts', $title),
         null,
-        \core\output\notification::NOTIFY_INFO);
+        \core\output\notification::NOTIFY_INFO
+    );
 }
 
 $PAGE->set_url(new moodle_url('/local/solalerts/edit.php', $pageparams));
@@ -91,14 +93,23 @@ if ($formdata = $form->get_data()) {
             'format' => FORMAT_HTML,
             'itemid' => $solalert->get('id'),
         ];
-        $data = file_postupdate_standard_editor($data, 'content', $editoroptions,
-            $context, 'local_solalerts', 'alert', $solalert->get('id'));
+        $data = file_postupdate_standard_editor(
+            $data,
+            'content',
+            $editoroptions,
+            $context,
+            'local_solalerts',
+            'alert',
+            $solalert->get('id')
+        );
         $solalert->set('content', $data->content);
         $solalert->update();
-        redirect(new moodle_url('/local/solalerts/index.php'),
+        redirect(
+            new moodle_url('/local/solalerts/index.php'),
             get_string('newsaved', 'local_solalerts'),
             null,
-            \core\output\notification::NOTIFY_SUCCESS);
+            \core\output\notification::NOTIFY_SUCCESS
+        );
     } else {
         $solalert = new solalert($formdata->id);
 
@@ -127,10 +138,12 @@ if ($formdata = $form->get_data()) {
             // Set image file urls to @@PLUGINFILE@@ etc.
             $solalert->set('content', $data->content);
             $solalert->update();
-            redirect(new moodle_url('/local/solalerts/index.php'),
+            redirect(
+                new moodle_url('/local/solalerts/index.php'),
                 get_string('updated', 'local_solalerts', $formdata->title),
                 null,
-                \core\output\notification::NOTIFY_SUCCESS);
+                \core\output\notification::NOTIFY_SUCCESS
+            );
         }
     }
 }

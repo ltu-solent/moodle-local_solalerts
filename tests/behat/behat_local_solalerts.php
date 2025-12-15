@@ -25,7 +25,6 @@
 
 require_once(__DIR__ . '/../../../../lib/behat/behat_base.php');
 
-use Behat\Gherkin\Node\PyStringNode as PyStringNode;
 use Behat\Gherkin\Node\TableNode;
 use local_solalerts\api;
 use local_solalerts\solalert;
@@ -122,7 +121,7 @@ class behat_local_solalerts extends behat_base {
             $availableroles = local_solalerts\api::availableroles(CONTEXT_COURSE);
             $rolenamelist = explode(',', $solalert->rolesincourse);
             // Validate the shortname is correct and create a list of ids.
-            $validroles = array_filter($roles, function($role) use ($rolenamelist, $availableroles) {
+            $validroles = array_filter($roles, function ($role) use ($rolenamelist, $availableroles) {
                 if (!isset($availableroles[$role->id])) {
                     return false;
                 }
@@ -136,7 +135,7 @@ class behat_local_solalerts extends behat_base {
             $availableroles = local_solalerts\api::availableroles(CONTEXT_COURSE);
             $rolenamelist = explode(',', $solalert->rolesinsystem);
             // Validate the shortname is correct and create a list of ids.
-            $validroles = array_filter($roles, function($role) use ($rolenamelist, $availableroles) {
+            $validroles = array_filter($roles, function ($role) use ($rolenamelist, $availableroles) {
                 if (!isset($availableroles[$role->id])) {
                     return false;
                 }

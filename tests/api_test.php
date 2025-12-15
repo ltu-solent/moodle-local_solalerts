@@ -161,7 +161,6 @@ final class api_test extends advanced_testcase {
 
         $solrecord->displayto = 0;
         $this->assertTrue(api::can_display($solrecord, $pagetype, $context, $matchcourse->id));
-
     }
 
     /**

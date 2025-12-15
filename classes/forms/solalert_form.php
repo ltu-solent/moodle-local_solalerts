@@ -44,7 +44,6 @@ require_once($CFG->dirroot . '/user/filters/profilefield.php');
  * Solalert Class
  */
 class solalert_form extends persistentform {
-
     /**
      * Name of persistent class
      *
@@ -97,9 +96,7 @@ class solalert_form extends persistentform {
 
         $mform->addElement('text', 'sortorder', new lang_string('sortorder', 'local_solalerts'));
 
-        $mform->addElement('header', 'displayconditionheader',
-            new lang_string('displayconditions', 'local_solalerts')
-        );
+        $mform->addElement('header', 'displayconditionheader', new lang_string('displayconditions', 'local_solalerts'));
         $mform->addElement('html', get_string('displayconditions_desc', 'local_solalerts'));
 
         $choices = ['' => new lang_string('choosepagetype', 'local_solalerts')]
@@ -108,10 +105,18 @@ class solalert_form extends persistentform {
         $mform->addHelpButton('pagetype', 'pagetype', 'local_solalerts');
         $mform->addRule('pagetype', $required, 'required', null, 'client');
 
-        $mform->addElement('date_time_selector', 'displayfrom', new lang_string('displayfrom', 'local_solalerts'),
-            ['optional' => true]);
-        $mform->addElement('date_time_selector', 'displayto', new lang_string('displayto', 'local_solalerts'),
-            ['optional' => true]);
+        $mform->addElement(
+            'date_time_selector',
+            'displayfrom',
+            new lang_string('displayfrom', 'local_solalerts'),
+            ['optional' => true]
+        );
+        $mform->addElement(
+            'date_time_selector',
+            'displayto',
+            new lang_string('displayto', 'local_solalerts'),
+            ['optional' => true]
+        );
 
         $userfilters = [
             'userprofilefield' => 1,

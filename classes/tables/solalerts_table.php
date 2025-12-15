@@ -25,16 +25,13 @@
 
 namespace local_solalerts\tables;
 
-defined('MOODLE_INTERNAL') || die();
-require_once("$CFG->libdir/tablelib.php");
-
 use context_system;
+use core_table\sql_table;
 use core_user;
 use html_writer;
 use lang_string;
 use local_solalerts\filters\course_filter_customfield;
 use moodle_url;
-use table_sql;
 use user_filter_cohort;
 use user_filter_profilefield;
 use user_filter_text;
@@ -42,8 +39,7 @@ use user_filter_text;
 /**
  * Solalerts table for listing all available solalerts
  */
-class solalerts_table extends table_sql {
-
+class solalerts_table extends sql_table {
     /**
      * Pagetypes menu
      *

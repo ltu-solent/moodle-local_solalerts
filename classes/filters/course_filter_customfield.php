@@ -249,7 +249,7 @@ class course_filter_customfield {
         $a->field  = $customfields[$fieldid];
         $a->operator = $operators[$operator];
 
-        switch($operator) {
+        switch ($operator) {
             case 0: // Contains.
             case 1: // Doesn't contain.
             case 2: // Equal to.

@@ -25,7 +25,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$ADMIN->add('appearance',
+$ADMIN->add(
+    'appearance',
     new admin_externalpage(
         'solalerts',
         new lang_string('pluginname', 'local_solalerts'),
@@ -51,4 +52,3 @@ page-mod-assign-view';
     );
     $ADMIN->add('localplugins', $settings);
 }
-

@@ -37,7 +37,6 @@ require_once($CFG->dirroot . '/user/filters/profilefield.php');
  * Helper class
  */
 class api {
-
     /**
      * Contains
      */
@@ -211,7 +210,7 @@ class api {
             // We need to allow checking parent context, as the person may be viewing an activity,
             // and the parent is the course.
             $userroles = get_user_roles($pagecontext, $USER->id);
-            $hasroles = array_filter($userroles, function($role) use ($rolesincourse) {
+            $hasroles = array_filter($userroles, function ($role) use ($rolesincourse) {
                 return in_array($role->roleid, $rolesincourse);
             });
             if (count($hasroles) == 0) {
@@ -222,7 +221,7 @@ class api {
         if (isset($filters->rolesinsystem) && $filters->rolesinsystem != '') {
             $rolesinsystem = explode(',', $filters->rolesinsystem);
             $userroles = get_user_roles(context_system::instance(), $USER->id, false);
-            $hasroles = array_filter($userroles, function($role) use ($rolesinsystem) {
+            $hasroles = array_filter($userroles, function ($role) use ($rolesinsystem) {
                 return in_array($role->roleid, $rolesinsystem);
             });
             if (count($hasroles) == 0) {
