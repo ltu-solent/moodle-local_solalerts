@@ -50,12 +50,6 @@ class solalert_form extends persistentform {
      * @var string
      */
     protected static $persistentclass = solalert::class;
-    /**
-     * Defined filter fields
-     *
-     * @var array
-     */
-    protected $_fields;
 
     /**
      * Solalert object editing form definition.
@@ -126,10 +120,8 @@ class solalert_form extends persistentform {
             'coursecustomfield' => 1,
         ];
 
-        $this->_fields = [];
         foreach ($userfilters as $userfilter => $value) {
             if ($field = $this->get_field($userfilter, false)) {
-                $this->_fields[$userfilter] = $field;
                 $field->setupForm($mform);
             }
         }
