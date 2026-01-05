@@ -18,11 +18,11 @@ namespace local_solalerts\output;
 
 use core\di;
 use core\output\html_writer;
+use core\output\renderable;
 use core\output\renderer_base;
+use core\output\templatable;
 use local_solalerts\hook\after_course_content_header;
-use renderable;
 use stdClass;
-use templatable;
 
 /**
  * Class solalerts
