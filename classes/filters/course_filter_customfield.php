@@ -49,6 +49,13 @@ class course_filter_customfield {
      * @var bool
      */
     public $advanced;
+
+    /**
+     * Field for sql
+     *
+     * @var string
+     */
+    public $field;
     /**
      * Constructor
      *
@@ -56,10 +63,11 @@ class course_filter_customfield {
      * @param string $label
      * @param bool $advanced
      */
-    public function __construct($name, $label, $advanced) {
+    public function __construct($name, $label, $advanced, $field = 'id') {
         $this->name     = $name;
         $this->label    = $label;
         $this->advanced = $advanced;
+        $this->field = $field;
     }
 
     /**
@@ -220,7 +228,8 @@ class course_filter_customfield {
         if ($where !== '') {
             $where = "WHERE $where";
         }
-        return ["id $op (SELECT instanceid FROM {customfield_data} $where) ", $params];
+        $field = $this->field;
+        return ["$field $op (SELECT instanceid FROM {customfield_data} $where) ", $params];
     }
 
     /**
