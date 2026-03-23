@@ -62,6 +62,7 @@ class course_filter_customfield {
      * @param string $name
      * @param string $label
      * @param bool $advanced
+     * @param string $field You can specify an alias in the field
      */
     public function __construct($name, $label, $advanced, $field = 'id') {
         $this->name     = $name;
